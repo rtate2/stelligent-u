@@ -13,4 +13,9 @@ Resources:
   RandysS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref BucketName
+      BucketName: !Join
+                    - ''
+                    - - ''
+                      - !Ref "AWS::AccountId"
+                      - '-'
+                      - !Ref BucketName
