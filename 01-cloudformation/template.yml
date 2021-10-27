@@ -9,13 +9,37 @@ Parameters:
     Description: Randy's S3 bucket
     Type: String
 
+  # usRegions:
+  #   Description: My preferred region
+  #   Default: us-east-1
+  #   Type: String
+  #   AllowedValues:
+  #     - us-east-1
+  #     - us-east-2
+  #     - us-west-1
+  #     - us-west-2
+  #   ConstraintDescription: must specify a US region
+
+Conditions:
+  PreferredRegion: !Equals
+    - !Ref AWS::Region
+    - us-east-1
+
 Resources:
   RandysS3Bucket:
     Type: AWS::S3::Bucket
+ #   Condition: "Logical Id"
     Properties:
-      BucketName: !Join
-                    - ''
-                    - - ''
-                      - !Ref "AWS::AccountId"
-                      - '-'
-                      - !Ref BucketName
+      BucketName:
+        !If
+          - PreferredRegion
+          - !Join
+            - '-'
+            - - !Ref AWS::AccountId
+              - !Ref BucketName
+          - !Join
+            - '-'
+            - - !Ref AWS::Region
+              - !Ref BucketName
+
+    # Execution command: aws cloudformation create-stack --stack-name rt-m01u1-train-use1 --template-body file://template.yml --parameters file://parameters.json --region us-east-2
