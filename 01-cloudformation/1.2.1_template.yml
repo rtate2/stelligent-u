@@ -34,6 +34,12 @@ Resources:
           Resource: '*'
       Users:
         - !Ref iamUser
-    
+
+Outputs :
+  ManagedPolicyARN:
+    Description: The iamManagedPolicy ARN
+    Value: !Ref iamManagedPolicy
+#    Export:
+#      Name: Value to export
 
     # Execution command: aws cloudformation create-stack --stack-name rt-102u1-train-use1 --template-body file://1.2.1_template.yml --parameters file://1.2.1_parameters.json --capabilities CAPABILITY_NAMED_IAM
