@@ -160,18 +160,27 @@ name.
 
 _Why do we prefer the YAML format for CFN templates?_
 
+YAML use less punctuation and should be easier to write and to read. YAML inherently provides some features, such as commenting, that aren't available in JSON.
+
 #### Question: Protecting Resources
 
 _What else can you do to prevent resources in a stack from being deleted?_
 
 See [DeletionPolicy](https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-accidental-updates/).
+Set the DeletionPolicy attribute to prevent the deletion of an individual resource at the stack level.
 
 _How is that different from applying Termination Protection?_
+Termination Protection keeps the entire stack from being deleted when enabled, while DeletionPolicy attribute can target specific resources to manage within the stack during deletion or updates.
 
 #### Task: String Substitution
 
 Demonstrate 2 ways to code string combination/substitution using
 built-in CFN functions.
+1. !Sub
+  - String
+  - Var1Name: Var1Value
+    Var2Name: Var2Value
+2.  !Join [ delimiter, [ comma-delimited list of values ] ]
 
 ## Lesson 1.2: Integration with Other AWS Resources
 

@@ -1,0 +1,56 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Randy is integrating with other AWS Resources
+
+Parameters:
+  UserName:
+    Description: IAM user's name
+    Type: String
+
+Resources:
+  iamUser:
+    Type: AWS::IAM::User
+    Properties:
+#    Groups:
+#      - String
+#    LoginProfile:
+#      LoginProfile
+#    ManagedPolicyArns:
+ #     - !Ref iamManagedPolicy
+#    Path: String
+#    PermissionsBoundary: String ARN of the policy that is used to set the permissions boundary for the user
+#    Policies:
+#      - Policy
+  #  Tags:
+  #    - Tag
+      UserName: !Join
+                  - "-"
+                  - 
+                    - !Ref UserName
+                    - !Ref AWS::Region
+
+  iamManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Policy to allow access solely to 'Read' actions against all S3 Buckets.
+ #     Groups:
+ #       - String
+      ManagedPolicyName: rtUserPolicyDocument
+ #     Path: String
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+            - 's3:Describe*'
+            - 's3:List'
+          Resource: '*'
+  #    Roles:
+  #      - String
+      Users:
+        - !Ref iamUser
+    
+
+    # Execution command: aws cloudformation create-stack --stack-name rt-m01u1-train-use1 --template-body file://template.yml --parameters file://parameters.json --region us-east-2
