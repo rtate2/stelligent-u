@@ -234,6 +234,11 @@ the Managed Policy ARN created by and exported from the previous Stack.
 Delete your CFN stacks in the same order you created them in. Did you
 succeed? If not, describe how you would _identify_ the problem, and
 resolve it yourself.
+I did not succeed. 
+
+"Export rt-102u1-train-use1-rtManagedPolicyARN cannot be deleted as it is in use by rt-102u3-train-use1"
+
+I checked the console and found the error in the Events tab within the CFN stack. I would just have to delete the stacks in reverse order of creation.
 
 ### Retrospective 1.2
 
@@ -241,6 +246,15 @@ resolve it yourself.
 
 Show how to use the IAM policy tester to demonstrate that the user
 cannot perform 'Put' actions on any S3 buckets.
+
+https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/simulate-custom-policy.html
+
+aws iam simulate-custom-policy \
+--policy-input-list '{ "Version": "2012-10-17","Statement": [{ "Action": [ "s3:Describe*", "s3:List*" ],"Resource": "*","Effect": "Allow"}]}' \
+--action-names "s3:PUT*" \
+--output text
+
+EVALUATIONRESULTS       s3:PUT* implicitDeny    *
 
 #### Task: SSM Parameter Store
 

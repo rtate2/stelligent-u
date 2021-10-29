@@ -4,10 +4,10 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description:
   Randy is integrating with other AWS Resources
 
-Parameters:
-  UserName:
-    Description: IAM user's name
-    Type: String
+# Parameters:
+#   UserName:
+#     Description: IAM user's name
+#     Type: String
 
 Resources:
   iamUser:
@@ -16,7 +16,7 @@ Resources:
       UserName: !Join
                   - "-"
                   - 
-                    - !Ref UserName
+                    - '{{resolve:ssm:Randy_Parameter:1}}'
                     - !Ref AWS::Region
 
   iamManagedPolicy:
@@ -44,3 +44,5 @@ Outputs :
         !Sub '${AWS::StackName}-rtManagedPolicyARN'
 
     # Execution command: aws cloudformation create-stack --stack-name rt-102u1-train-use1 --template-body file://1.2.1_template.yml --parameters file://1.2.1_parameters.json --capabilities CAPABILITY_NAMED_IAM
+
+    # Resource: https://cloudkatha.com/using-ssm-parameter-in-cloudformation-here-is-the-right-way/
