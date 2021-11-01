@@ -1,0 +1,16 @@
+- Create s3 bucket in the us-west-2 region
+aws s3api create-bucket --bucket stelligent-u-rtate --create-bucket-configuration LocationConstraint=us-west-2
+
+- List objects within bucket
+aws s3api list-objects --bucket stelligent-u-rtate --region us-west-2
+
+- Upload file to s3 bucket
+aws s3api put-object --bucket stelligent-u-rtate --region us-west-2 --key ./data/bitmoji.jpg --body data/bitmoji.jpg
+(https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/put-object.html)
+OR
+aws s3 cp ./data/Bonsai.docx s3://stelligent-u-rtate/ --region us-west-2
+(https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/cp.html)
+OR
+copy multiple files at once - (aws s3 cp ./data/ s3://stelligent-u-rtate --recursive)
+OR
+aws s3 sync . s3://stelligent-u-rtate/data/

@@ -120,11 +120,13 @@ Add an object to your bucket:
 ##### Question: Copying to Top Level
 
 _How would you copy the contents of the directory to the top level of your bucket?_
+aws s3 cp ./data/ s3://stelligent-u-rtate --recursive
 
 ##### Question: Directory Copying
 
 _How would you copy the contents and include the directory name in the s3 object
 paths?_
+aws s3 cp ./data/ s3://stelligent-u-rtate/data/ --recursive
 
 ##### Question: Object Access
 
@@ -135,6 +137,7 @@ For further reading, see the S3 [Access Policy Language Overview](https://docs.a
 ##### Question: Sync vs Copy
 
 _What makes "sync" a better choice than "cp" for some S3 uploads?_
+It automatically recursively copies of directories
 
 #### Lab 2.1.3: Exclude Private Objects When Uploading to a Bucket
 
