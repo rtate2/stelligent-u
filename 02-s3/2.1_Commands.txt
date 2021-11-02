@@ -14,3 +14,16 @@ OR
 copy multiple files at once - (aws s3 cp ./data/ s3://stelligent-u-rtate --recursive)
 OR
 aws s3 sync . s3://stelligent-u-rtate/data/
+https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/sync.html
+
+- Exclude private objects when uploading to a bucket
+aws s3 sync data/ s3://stelligent-u-rtate --exclude "private.txt"
+
+- Include public objects when uploading to a bucket
+aws s3 sync data/ s3://stelligent-u-rtate --exclude "private.txt" --include "*.jpg"
+
+- Delete object within a bucket
+aws s3api delete-object --bucket stelligent-u-rtate --key Bonsai.docx
+
+- Delete bucket and all objects at once
+aws s3 rb --bucket stelligent-u-rtate --force
