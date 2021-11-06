@@ -197,9 +197,12 @@ permissions on the file?_
 
 (Hint: see the list of [Canned ACLs](https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl).)
 
+aws s3 cp data/private.txt s3://stelligent-u-rtate/data/ --acl bucket-owner-full-control
+
 ##### Question: Changing Permissions
 
 _Is there a way you can change the permissions on the file without re-uploading it?_
+Yes, you could go to the AWS console and edit the access control list within the permissions tab
 
 #### Lab 2.2.3: Using the API from the CLI
 
