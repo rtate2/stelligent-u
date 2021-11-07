@@ -26,4 +26,24 @@ aws s3 sync data/ s3://stelligent-u-rtate --exclude "private.txt" --include "*.j
 aws s3api delete-object --bucket stelligent-u-rtate --key Bonsai.docx
 
 - Delete bucket and all objects at once
-aws s3 rb --bucket stelligent-u-rtate --force
+aws s3 rb s3://stelligent-u-rtate --force
+
+- Modify bucket object permissions
+aws s3 cp data/private.txt s3://stelligent-u-rtate/data/ --acl bucket-owner-full-control
+OR
+aws s3 sync data/ s3://stelligent-u-rtate/data/ --acl public-read
+
+- Create a IAM policy
+aws iam create-policy --policy-name rt-policy --policy-document file://2.2.3_Policy.json
+
+- Attach IAM policy to user
+aws iam attach-user-policy --policy-arn arn:aws:iam::858633482938:policy/rt-policy --user-name rtate_aa
+
+- Authenticated users get read access to bucket object
+aws s3 cp ./data/private.txt  s3://stelligent-u-rtate/data/ --acl authenticated-read
+
+- Get a bucket-policy
+aws s3api get-bucket-policy --bucket stelligent-u-rtate
+
+- Attach bucket policy
+aws s3api put-bucket-policy --bucket stelligent-u-rtate --policy file://2.2.3_BucketPolicy.json

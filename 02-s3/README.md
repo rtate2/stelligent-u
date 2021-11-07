@@ -230,10 +230,12 @@ file and read "private.txt".
 
 _What do you see when you try to read the existing bucket policy before you
 replace it?_
+An error - "An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist"
 
 #### Question: Default Permissions
 
 _How do the default permissions differ from the policy you're setting?_
+The default permissions block all public read access, while the policy I wrote allows me (user rtate_aa) to have the maintenance priviledges.
 
 #### Lab 2.2.4: Using CloudFormation
 
