@@ -1,0 +1,5 @@
+- List all roles
+aws iam list-roles
+
+- Describe the specific role your stack created
+aws iam get-role --role-name rt-m03x11-stack-RandyIamRole-DX6VAVXSGF6S
