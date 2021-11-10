@@ -123,6 +123,29 @@ policy:
 - Update the Stack. *Did the stack update work?*
 
   - Query the stack to determine its state.
+  {
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:858633482938:stack/rt-m03x11-stack/ef3841d0-41aa-11ec-a8e9-0a99f216c4c9",
+            "StackName": "rt-m03x11-stack",
+            "Description": "IAM roles creation",
+            "CreationTime": "2021-11-09T22:18:47.243000+00:00",
+            "LastUpdatedTime": "2021-11-10T02:11:55.397000+00:00",
+            "RollbackConfiguration": {},
+            "StackStatus": "UPDATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Capabilities": [
+                "CAPABILITY_NAMED_IAM"
+            ],
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}
   - If the stack update was not successful,
     [troubleshoot and determine why](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement).
 

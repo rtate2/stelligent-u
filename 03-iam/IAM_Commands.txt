@@ -3,3 +3,12 @@ aws iam list-roles
 
 - Describe the specific role your stack created
 aws iam get-role --role-name rt-m03x11-stack-RandyIamRole-DX6VAVXSGF6S
+
+- list customer-managed policies with AWS account
+aws iam list-policies --scope Local / --scope AWS --> for AWS managed policies
+
+- list specific policy
+aws iam get-policy --policy-arn 
+
+- Query an existing stack
+aws cloudformation describe-stacks --stack-name rt-m03x11-stack
