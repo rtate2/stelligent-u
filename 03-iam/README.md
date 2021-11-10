@@ -171,12 +171,45 @@ tool and practice using it.
 - Using the two roles in your stack, simulate the ability of each role
   to perform the following actions (using the AWS CLI):
 
+  RandyIamRole - aws iam simulate-custom-policy --policy-input-list '{ "Version": "2012-10-17","Statement": [{ "Action": [ "iam:GenerateCredentialReport", "iam:GenerateServiceLastAccessedDetails", "iam:Get*", "iam:List*", "iam:SimulateCustomPolicy", "iam:SimulatePrincipalPolicy" ],"Resource": "*","Effect": "Allow"}]}' --action-names "iam:ListRoles*" --output text
+
+  RandyIamRole2 - aws iam simulate-custom-policy --policy-input-list file://RandyIamRole2.json  --action-names "ec2:DescribeImages*" --output text
+
   - `iam:CreateRole`
+  RandyIamRole - EVALUATIONRESULTS       iam:CreateRole* implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       iam:CreateRole* implicitDeny    *
+  
   - `iam:ListRoles`
+  RandyIamRole -  EVALUATIONRESULTS       iam:ListRoles*  allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.1       IAM Policy
+                  ENDPOSITION     248     1
+                  STARTPOSITION   41      1
+  RandyIamRole2 - EVALUATIONRESULTS       iam:ListRoles*  allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.2       IAM Policy
+                  ENDPOSITION     10      15
+                  STARTPOSITION   19      3
+  
   - `iam:SimulatePrincipalPolicy`
+  RandyIamRole - EVALUATIONRESULTS       iam:SimulatePrincipalPolicy*    implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       iam:SimulatePrincipalPolicy*    implicitDeny    *
+  
   - `ec2:DescribeImages`
+  RandyIamRole - EVALUATIONRESULTS       ec2:DescribeImages*     implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       ec2:DescribeImages*     allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.1       IAM Policy
+                  ENDPOSITION     14      9
+                  STARTPOSITION   23      4
+  
   - `ec2:RunInstances`
+  RandyIamRole - EVALUATIONRESULTS       ec2:RunInstances*       implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       ec2:RunInstances*       implicitDeny    *
+  
   - `ec2:DescribeSecurityGroups`
+  RandyIamRole - EVALUATIONRESULTS       ec2:DescribeSecurityGroups*       implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       ec2:DescribeSecurityGroups*     allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.1       IAM Policy
+                  ENDPOSITION     14      9
+                  STARTPOSITION   23      4
 
 #### Lab 3.1.6: Clean Up
 

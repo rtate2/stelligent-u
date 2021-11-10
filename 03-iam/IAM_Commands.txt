@@ -12,3 +12,6 @@ aws iam get-policy --policy-arn
 
 - Query an existing stack
 aws cloudformation describe-stacks --stack-name rt-m03x11-stack
+
+- simulate-custom-policy
+aws iam simulate-custom-policy --action-names "iam:ListRoles*" --caller-arn 'arn:aws:iam::858633482938:role/rt-m03x11-stack-RandyIamRole2-M62UHLS6WER7' --policy-input-list file://RandyIamRole2.json
