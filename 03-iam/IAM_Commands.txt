@@ -18,3 +18,20 @@ aws iam simulate-custom-policy --action-names "iam:ListRoles*" --caller-arn 'arn
 
 - Display ARN as Output within CFN template (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html)
 aws cloudformation update-stack --stack-name rt-m03x11-stack --template-body file://3.1.4_template.yml --capabilities CAPABILITY_NAMED_IAM
+
+- Assume a Role - Using temporary security credentials with the AWS CAPABILITY_NAMED_IAM
+aws sts assume-role --role-arn arn:aws:iam::858633482938:role/rt-m03x21-stack-RandyRole-QLB9B1PWHYMA --role-session-name RandyRoleSession
+
+Output: (Credentials have been altered so don't waste your time.)
+{
+    "Credentials": {
+        "AccessKeyId": "ASIA4P2ULGK5HJJER7VU",
+        "SecretAccessKey": "Ruilns/V6bo5cx5/dLHKbyrhrHG8PSEfWOrTink",
+        "SessionToken": "IQoJb3JpZ2luX2VjEGIaCXVzLWVhc5TONEDEATH9EYCIQDfYVxbi/ITp7YTc15Gfsg9BHHc1YBvhCX++LrCNnc+MQIhANkDv71ig7iVlUcPzP80QPB4cuPWhv/g0Ajqn7Hdrq0GKp0CCBsQAxoMODU4NjMzNDgyOTM4IgwODhtt5785D8w1wYUq+gHV/pzbxgFKQt31egPfPJo9B9aMxpEjajl5T10ZMduoLNmu8HAruUDnK1MSz5Vs7TktUxevKH/jn0Bt1z9VAojLZrD9FHBbkw0jCyr3ddwivEj5h79P2OARtWR84NRI+Z437eoIDKWAfPgwvnq1t7zIUKHEUM/DEaJyVPIiDnMk6i76Xfoqlr7EUE1JjTvyq9ZnjIhS+s9xXYhQZ0Zd2zTTHxtVh1UhoeazNR9XigOEejFKn9u8/oeBhcykDFprsP7RZbA04veYDtV0U0UiXCEntqKfFjcmTw9uKak+2lYpckzo4vGgMZuWLEi6bPJlU9NU0utPZxGYX06TMLystYwGOpwBODFUC5kKywXeWPIigc/gRLCdf6+jnKaB2eFVqozaIqNBygNggXvZKC1SgWsLGqLS3J6OAZAqmLB3Hr/9YBw1A4CSaUKVZ0/vV+2HoMocDfaCmYIj/ZixOZP1j8v2lNSqW/hLga5R6RYNNwh8vHMLATxWhSHKwGyo5+bwjHm+xABRh95JZEU22f+eCnBoBSychW5YiOJsXT/ByWti",
+        "Expiration": "2021-11-11T18:43:24+00:00"
+    },
+    "AssumedRoleUser": {
+        "AssumedRoleId": "AROA4P2ULGK5HRAX4GSGL:RandyRoleSession",
+        "Arn": "arn:aws:sts::858633482938:assumed-role/rt-m03x21-stack-RandyRole-QLB9B1PWHYMA/RandyRoleSession"
+    }
+}
