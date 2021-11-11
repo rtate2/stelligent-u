@@ -19,6 +19,7 @@ aws iam simulate-custom-policy --action-names "iam:ListRoles*" --caller-arn 'arn
 - Display ARN as Output within CFN template (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html)
 aws cloudformation update-stack --stack-name rt-m03x11-stack --template-body file://3.1.4_template.yml --capabilities CAPABILITY_NAMED_IAM
 
+---------------------------------------------------------------------------------------------------------------------
 - Assume a Role - Using temporary security credentials with the AWS CAPABILITY_NAMED_IAM
 aws sts assume-role --role-arn arn:aws:iam::858633482938:role/rt-m03x21-stack-RandyRole-QLB9B1PWHYMA --role-session-name RandyRoleSession
 
@@ -35,3 +36,13 @@ Output: (Credentials have been altered so don't waste your time.)
         "Arn": "arn:aws:sts::858633482938:assumed-role/rt-m03x21-stack-RandyRole-QLB9B1PWHYMA/RandyRoleSession"
     }
 }
+
+- Create temporary environment variables to assume the IAM role
+export AWS_ACCESS_KEY_ID=RoleAccessKeyID
+export AWS_SECRET_ACCESS_KEY=RoleSecretKey
+export AWS_SESSION_TOKEN=RoleSessionToken
+
+- Verify your current AWS user profile
+aws sts get-caller-identity
+---------------------------------------------------------------------------------------------------------------------
+

@@ -281,10 +281,12 @@ Test the capabilities of this new Role.
 
 - Using the AWS CLI, assume that updated role and list the S3 buckets
   in the us-east-1 region.
+  I could not list the s3 buckets (AccessDenied)
 
 - Acting as this role, try to create an S3 bucket using the AWS CLI.
 
   - Did it succeed? It should not have!
+    Nope!
   - If it succeeded, troubleshoot how Read access allowed the role
     to create a bucket.
 
