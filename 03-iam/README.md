@@ -318,14 +318,20 @@ Clean up. Take the actions necessary to delete the stack.
 _In the context of an AWS User or Role, what is the difference between
 an inline policy and a customer managed policy? What are the differences
 between a customer managed policy and an AWS managed policy?_
+An inline policy is attached directly to the role during creation. A customer managed policy can be inline or stand-alone.
+An AWS managed policy is stock with permissions you cannot change, while a customer managed policy gives the customer the freedom to make any changes.
 
 #### Question: Role Assumption
 
 _When assuming a role, are the permissions of the initial principal
 mixed with those of the role being assumed?
+Nope!
+
 Describe how that could easily be demonstrated with both a
 [positive and negative testing](https://www.guru99.com/positive-vs-negative-testing.html)
 approach._
+With positive testing I would test my "allow" s3:ReadOnly by attempting to list a bucket and/or its contents
+With negative testing I would attempt to create a bucket or upload a file; anything that isn't directly related to the "allow", but testing more of the "deny"
 
 ## Lesson 3.3: Fine-Grained Controls With Policies
 
