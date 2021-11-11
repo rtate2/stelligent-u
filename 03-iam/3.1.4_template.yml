@@ -34,4 +34,13 @@ Resources:
         - 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess'
         - 'arn:aws:iam::aws:policy/IAMReadOnlyAccess'
 
-  # Execution: aws cloudformation update-stack --stack-name rt-m03x11-stack --template-body file://3.1.4_template.yml --capabilities CAPABILITY_NAMED_IAM
+Outputs:
+  RandyIamRoleARN:
+    Description: ARN of RandyIamRole
+    Value: !GetAtt RandyIamRole.Arn
+  
+  RandyIamRole2ARN:
+    Description: ARN of RandyIamRole2
+    Value: !GetAtt RandyIamRole2.Arn
+
+    # Execution: aws cloudformation update-stack --stack-name rt-m03x11-stack --template-body file://3.1.4_template.yml --capabilities CAPABILITY_NAMED_IAM

@@ -15,3 +15,6 @@ aws cloudformation describe-stacks --stack-name rt-m03x11-stack
 
 - simulate-custom-policy
 aws iam simulate-custom-policy --action-names "iam:ListRoles*" --caller-arn 'arn:aws:iam::858633482938:role/rt-m03x11-stack-RandyIamRole2-M62UHLS6WER7' --policy-input-list file://RandyIamRole2.json
+
+- Display ARN as Output within CFN template (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html)
+aws cloudformation update-stack --stack-name rt-m03x11-stack --template-body file://3.1.4_template.yml --capabilities CAPABILITY_NAMED_IAM
