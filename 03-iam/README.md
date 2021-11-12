@@ -387,8 +387,11 @@ read-only access to the other.
   - Upload a file to each new bucket.
 
 *Were there any errors? If so, take note of them.*
+rt-stelligent-u-bucket-2 (s3 Read Only) failed to upload.
+upload failed: data\randyfile3.txt to s3://rt-stelligent-u-bucket-2/randyfile3.txt An error occurred (AccessDenied) when calling the PutObject operation: Access Denied
 
 *What were the results you expected, based on the role's policy?*
+I expected the read only to fail whenever I attempted to upload the file. The Full Access performed exactly how I expected and successfully uploaded the file.
 
 #### Lab 3.3.3: Conditional restrictions
 
