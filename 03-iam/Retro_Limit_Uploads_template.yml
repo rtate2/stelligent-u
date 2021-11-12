@@ -1,0 +1,50 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Fine-Grained Controls with Policies Stack
+
+Resources:
+  RandyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - 'arn:aws:iam::858633482938:user/rtate_aa'
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: Randys3FullAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:*'
+                Resource:
+                  - 'arn:aws:s3:::rt-stelligent-u-bucket-1/*'
+                  - 'arn:aws:s3:::rt-stelligent-u-bucket-1'
+        - PolicyName: RandyReadOnlyPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "s3:Put*"
+                Resource:
+                  - 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski*'
+                  - 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski'
+
+  RandyS3Bucket1:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: rt-stelligent-u-bucket-1
+
+  RandyS3Bucket2:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: rt-stelligent-u-bucket-2
+
+  # aws cloudformation update-stack --stack-name rt-m03x31-stack --template-body file://3.3.3_template.yml --capabilities CAPABILITY_NAMED_IAM

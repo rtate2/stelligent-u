@@ -434,7 +434,11 @@ Code at least one new positive and one new negative test.
 _Is it possible to limit uploads of objects with a specific prefix (e.g.
 starting with "lebowski/") to an S3 bucket using IAM conditions? If not, how else
 could this be accomplished?_
+Nope! At least I didn't find it.
 
+I created an Allow s3:Put* policy with specific resources pointing to 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski*'
+
+I then used the following to upload files: aws s3 cp lebowski/lebowskifile2.txt s3://rt-stelligent-u-bucket-2/lebowski/
 #### Task: Limiting Uploads
 
 Research and review the best method to limit uploads with a specific prefix to
