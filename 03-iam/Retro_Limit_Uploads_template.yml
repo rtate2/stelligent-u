@@ -33,9 +33,10 @@ Resources:
               - Effect: Allow
                 Action:
                   - "s3:Put*"
+                  - "s3:List*"
                 Resource:
-                  - 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski*'
-                  - 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski'
+                  - 'arn:aws:s3:::rt-stelligent-u-bucket-2/*'
+                  - 'arn:aws:s3:::rt-stelligent-u-bucket-2/'
 
   RandyS3Bucket1:
     Type: AWS::S3::Bucket

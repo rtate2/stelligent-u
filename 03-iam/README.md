@@ -439,6 +439,9 @@ Nope! At least I didn't find it.
 I created an Allow s3:Put* policy with specific resources pointing to 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski*'
 
 I then used the following to upload files: aws s3 cp lebowski/lebowskifile2.txt s3://rt-stelligent-u-bucket-2/lebowski/
+
+After my initial testing, I'm not sure how we could limit uploads of objects besides using the exclude param along with the include.
+ex. aws s3 sync . s3://rt-stelligent-u-bucket-1/lebowski/ --exclude "*" --include "lebowski/*"
 #### Task: Limiting Uploads
 
 Research and review the best method to limit uploads with a specific prefix to
