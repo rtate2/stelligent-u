@@ -1,3 +1,8 @@
 - view the primary CIDR
 aws ec2 describe-vpcs --vpc-id vpc-1a2b3c4d --query Vpcs[*].CidrBlock
 
+- create a key pair via CLI (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)
+aws ec2 create-key-pair --key-name stelligent-u-key-pair --query "KeyMaterial" --output text > stelligent-u-key-pair.pem
+
+- Verify key-pair is stored in AWS
+aws ec2 describe-key-pairs --key-name stelligent-u-key-pair
