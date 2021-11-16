@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Description: New VPC with Private subnet stack
+Description: New VPC with Public subnet stack
 
 Parameters:
   cidrBlock:
@@ -36,6 +36,35 @@ Resources:
           Value: "4.1.1"
       VpcId: !Ref RandyVPC
 
+  # 5. Add an Internet Gateway resource
+  RandyInternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  # 6. Attach the InternetGateway to VPC
+  RandyInternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref RandyInternetGateway
+      VpcId: !Ref RandyVPC
+
+  # 7. Create a route table for the VPC, add the gateway to it, attach it to the subnet
+  RandyRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RandyVPC
+
+  RandyGatewayRouteTableAssociation:
+    Type: AWS::EC2::GatewayRouteTableAssociation
+    Properties:
+      GatewayId: !GetAtt RandyInternetGateway.InternetGatewayId
+      RouteTableId: !Ref RandyRouteTable
+
+  RandySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      SubnetId: !Ref RandySubnet
+
 Outputs:
   # 3. Provide VPC ID and subnet ID as stack outputs
   MyVpc:
@@ -46,4 +75,4 @@ Outputs:
     Description: Randy's private subnet
     Value: !Ref RandySubnet
 
-# Execution command: aws cloudformation create-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.1_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 
+# Execution command: aws cloudformation update-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.2_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 
