@@ -1,0 +1,45 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: New VPC with Private subnet stack
+
+Parameters:
+  cidrBlock:
+    Description: CIDR block in private IP space
+    Type: String
+
+Resources:
+  RandyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref cidrBlock
+      Tags: 
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.1"
+
+  RandySubnet:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      CidrBlock: '10.0.0.0/24'
+      Tags: 
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.1"
+      VpcId: !Ref RandyVPC
+
+Outputs:
+  MyVpc:
+    Description: Randy's main VPC
+    Value: !Ref RandyVPC
+
+  MySubnet:
+    Description: Randy's private subnet
+    Value: !Ref RandySubnet
+
+# Execution command: aws cloudformation create-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.1_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 

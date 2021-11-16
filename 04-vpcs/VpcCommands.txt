@@ -1,0 +1,3 @@
+- view the primary CIDR
+aws ec2 describe-vpcs --vpc-id vpc-1a2b3c4d --query Vpcs[*].CidrBlock
+
