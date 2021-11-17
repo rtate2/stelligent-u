@@ -6,3 +6,6 @@ aws ec2 create-key-pair --key-name stelligent-u-key-pair --query "KeyMaterial" -
 
 - Verify key-pair is stored in AWS
 aws ec2 describe-key-pairs --key-name stelligent-u-key-pair
+
+- Get list of Amazon Linux AMIs
+aws ec2 describe-images --owners 'amazon' --filters 'Name=description,Values=Amazon Linux AMI*' --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text'

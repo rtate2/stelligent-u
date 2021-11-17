@@ -14,7 +14,9 @@ Resources:
     Properties:
       CidrBlock: !Ref cidrBlock
       # 4. Tag all new resources with following
-      Tags: 
+      Tags:
+        - Key: "Name"
+          Value: "rtate-vpc"
         - Key: "user"
           Value: "rtate_aa"
         - Key: "stelligent-u-lesson"
@@ -27,7 +29,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties: 
       CidrBlock: '10.0.0.0/24'
-      Tags: 
+      Tags:
         - Key: "user"
           Value: "rtate_aa"
         - Key: "stelligent-u-lesson"
@@ -53,11 +55,20 @@ Resources:
     Properties:
       VpcId: !Ref RandyVPC
 
-  RandyGatewayRouteTableAssociation:
-    Type: AWS::EC2::GatewayRouteTableAssociation
+  RandyRoute1:   # Public route table has direct routing to IGW:
+    Type: AWS::EC2::Route
+    DependsOn: RandyInternetGatewayAttachment
     Properties:
-      GatewayId: !GetAtt RandyInternetGateway.InternetGatewayId
       RouteTableId: !Ref RandyRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref RandyInternetGateway
+
+  # Need to figure out why this didn't work as expected
+  # RandyGatewayRouteTableAssociation:
+  #   Type: AWS::EC2::GatewayRouteTableAssociation
+  #   Properties:
+  #     GatewayId: !GetAtt RandyInternetGateway.InternetGatewayId
+  #     RouteTableId: !Ref RandyRouteTable
 
   RandySubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -70,9 +81,13 @@ Outputs:
   MyVpc:
     Description: Randy's main VPC
     Value: !Ref RandyVPC
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyVPC'
 
   MySubnet:
     Description: Randy's private subnet
     Value: !Ref RandySubnet
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyPrivateSubnet'
 
 # Execution command: aws cloudformation update-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.2_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 
