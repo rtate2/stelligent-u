@@ -1,0 +1,112 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create EC2 instance for RandyVPC stack
+
+Parameters:
+  KeyName:
+    Description: Key name for EC2
+    Type: String
+
+  Ec2AmiId:
+    Description: EC2 AMI ID
+    Type: String
+
+  T2InstanceType:
+    Description: EC2 instance type
+    Type: String  
+
+Resources:
+  # 1. Create an EC2 instance
+  RandysEc2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref Ec2AmiId
+      InstanceType: !Ref T2InstanceType
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeleteOnTermination: true
+          DeviceIndex: 0
+          GroupSet:
+            - !Ref RandySecurityGroup
+          SubnetId:
+            !ImportValue
+              'rt-m04u1x1-stack-RandyPrivateSubnet'
+      Tags:
+        - Key: "Name"
+          Value: "rt-stelligent-u-instance"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.5"
+
+  RandySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG for RandyVPC
+      GroupName: Randy EC2-SG
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: "Name"
+          Value: "rtate-sg"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.5"
+      VpcId:
+        !ImportValue
+          'rt-m04u1x1-stack-RandyVPC'
+
+  RandyElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref RandysEc2Instance
+      Tags:
+        - Key: "Name"
+          Value: "rtate-eIP"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.6"
+
+Outputs:
+  RandyEc2InstanceId:
+    Value: !Ref RandysEc2Instance
+    Export:
+      Name: !Sub ${AWS::StackName}-RandyEc2InstanceId
+
+  RandyEc2PrivateId:
+    Value: !GetAtt RandysEc2Instance.PrivateIp
+    Export:
+      Name: !Sub ${AWS::StackName}-RandyEc2PrivateId
+
+  RandyPublicIp:
+    Value: !Ref RandyElasticIP
+    Export:
+      Name: !Sub ${AWS::StackName}-RandyPublicIp
+
+# Execution command: aws cloudformation update-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.6_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 
