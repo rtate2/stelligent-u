@@ -27,6 +27,8 @@ Resources:
         - AssociatePublicIpAddress: true
           DeleteOnTermination: true
           DeviceIndex: 0
+          GroupSet:
+            - !Ref RandySecurityGroup
           SubnetId:
             !ImportValue
               'rt-m04u1x1-stack-RandyPrivateSubnet'
@@ -38,8 +40,43 @@ Resources:
         - Key: "stelligent-u-lesson"
           Value: "4.1"
         - Key: "stelligent-u-lab"
-          Value: "4.1.4"
+          Value: "4.1.5"
 
+  RandySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG for RandyVPC
+      GroupName: Randy EC2-SG
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: "Name"
+          Value: "rtate-sg"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.5"
+      VpcId:
+        !ImportValue
+          'rt-m04u1x1-stack-RandyVPC'
 Outputs:
   RandyEc2InstanceId:
     Value: !Ref RandysEc2Instance

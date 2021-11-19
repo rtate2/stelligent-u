@@ -149,6 +149,7 @@ Add a security group to your EC2 stack:
 ##### Question: Connectivity
 
 _Can you ssh to your instance yet?_
+Yes
 
 #### Lab 4.1.6: Elastic IP
 
