@@ -176,7 +176,7 @@ Yes
 ##### Question: Traffic
 
 _If you can ssh, can you send any traffic (e.g. curl) out to the Internet?_
-No
+Yes, only after I removed the specific egress and set it back to the default 0.0.0.0/0 allowing all traffic to go out.
 
 At this point, you've made your public EC2 instance an [ssh bastion](https://docs.aws.amazon.com/quickstart/latest/linux-bastion/architecture.html).
 We'll make use of that to explore your network below.
