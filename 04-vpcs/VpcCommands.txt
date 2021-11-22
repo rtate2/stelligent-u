@@ -11,3 +11,10 @@ aws ec2 describe-key-pairs --key-name stelligent-u-key-pair
 aws ec2 describe-images --owners 'amazon' --filters 'Name=description,Values=Amazon Linux AMI*' --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text'
 
 aws ec2 describe-images --owners amazon --filters 'Name=root-device-type,Values=ebs' 'Name=architecture,Values=x86_64' 'Name=description,Values=Amazon Linux 2 Kernel 5.10*' | jq -r '[ .Images[] | {ImageId,CreationDate} ] | sort_by(.CreationDate) | reverse | first | .ImageId' &
+
+- check instance to see if curl is an option
+curl ifconfig.me/all
+curl ifconfig.com
+
+- Secure copy pem to remote server (used at bastion host level for private instance access)
+scp -i "stelligent-u-key-pair.pem" stelligent-u-key-pair.pem ec2-user@54.164.3.223:~

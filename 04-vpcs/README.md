@@ -205,20 +205,24 @@ existing instance stack.
 ##### Question: Access
 
 _Can you find a way to ssh to this instance?_
+By adding a security group that allows TCP port 22 from the public instance (bastion host)
 
 ##### Question: Egress
 
 _If you can ssh to it, can you send traffic out?_
+Yes, if the NAT Gateway and route tables are set up correctly
 
 ##### Question: Deleting the Gateway
 
 _If you delete the NAT gateway, what happens to the ssh session on your private
 instance?_
+Your ssh session would be lost.
 
 ##### Question: Recreating the Gateway
 
 _If you recreate the NAT gateway and detach the Elastic IP from the public EC2
 instance, can you still reach the instance from the outside?_
+No, the bastion host is needed to ssh to the private ec2 instance
 
 Test it out with the AWS console.
 

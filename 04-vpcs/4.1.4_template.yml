@@ -5,11 +5,11 @@ Description: Create EC2 instance for RandyVPC stack
 Parameters:
   KeyName:
     Description: Key name for EC2
-    Type: String
+    Type: AWS::EC2::KeyPair::KeyName
 
   Ec2AmiId:
     Description: EC2 AMI ID
-    Type: String
+    Type: AWS::EC2::Image::Id
 
   T2InstanceType:
     Description: EC2 instance type

@@ -24,8 +24,8 @@ Resources:
       InstanceType: !Ref T2InstanceType
       KeyName: !Ref KeyName
       NetworkInterfaces:
-        - AssociatePublicIpAddress: true
-          DeleteOnTermination: true
+        #- AssociatePublicIpAddress: true
+        - DeleteOnTermination: true
           DeviceIndex: 0
           GroupSet:
             - !Ref RandySecurityGroup
@@ -83,6 +83,70 @@ Resources:
           Value: "4.1"
         - Key: "stelligent-u-lab"
           Value: "4.1.6"
+
+  ##New Code##############################################################################
+  #3. Add a new subnet and put a new EC2 private instance on it
+  RandySubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.1.0/24'
+      Tags:
+        - Key: "Name"
+          Value: "rt-subnet2"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.7"
+      VpcId:
+        !ImportValue
+          rt-m04u1x1-stack-RandyVPC
+  
+  RandysEc2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref Ec2AmiId
+      InstanceType: !Ref T2InstanceType
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - DeleteOnTermination: true
+          DeviceIndex: 0
+          GroupSet:
+            - !Ref RandySecurityGroup
+          SubnetId: !Ref RandySubnet2
+      Tags:
+        - Key: "Name"
+          Value: "rt-stelligent-u-instance2"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.7"
+
+  RandyRouteTable2:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        !ImportValue
+          'rt-m04u1x1-stack-RandyVPC'
+
+  RandyRoute2:   # Route table has direct routing to NatGateway:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RandyRouteTable2
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        !ImportValue
+          'rt-m04u1x1-stack-RandyNatGateway'
+
+  RandySubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RandyRouteTable2
+      SubnetId: !Ref RandySubnet2
+  ##End of New Code##############################################################################
 
 Outputs:
   RandyEc2InstanceId:
