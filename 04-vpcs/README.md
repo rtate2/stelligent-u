@@ -241,6 +241,7 @@ First, add one on the public subnet:
 ##### Question: EC2 Connection
 
 _Can you still reach your EC2 instances?_
+Yes, I am able to reach my public instance and then ssh to my private. Could also ping the private instance from the public (bastion)
 
 Add another ACL to your private subnet:
 
@@ -252,6 +253,7 @@ Add another ACL to your private subnet:
   public subnet.
 
 _Verify again that you can reach your instance._
+Yes, I still can reach both instances.
 
 ### Retrospective 4.1
 
