@@ -1,0 +1,20 @@
+- view the primary CIDR
+aws ec2 describe-vpcs --vpc-id vpc-1a2b3c4d --query Vpcs[*].CidrBlock
+
+- create a key pair via CLI (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)
+aws ec2 create-key-pair --key-name stelligent-u-key-pair --query "KeyMaterial" --output text > stelligent-u-key-pair.pem
+
+- Verify key-pair is stored in AWS
+aws ec2 describe-key-pairs --key-name stelligent-u-key-pair
+
+- Get list of Amazon Linux AMIs
+aws ec2 describe-images --owners 'amazon' --filters 'Name=description,Values=Amazon Linux AMI*' --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text'
+
+aws ec2 describe-images --owners amazon --filters 'Name=root-device-type,Values=ebs' 'Name=architecture,Values=x86_64' 'Name=description,Values=Amazon Linux 2 Kernel 5.10*' | jq -r '[ .Images[] | {ImageId,CreationDate} ] | sort_by(.CreationDate) | reverse | first | .ImageId' &
+
+- check instance to see if curl is an option
+curl ifconfig.me/all
+curl ifconfig.com
+
+- Secure copy pem to remote server (used at bastion host level for private instance access)
+scp -i "stelligent-u-key-pair.pem" stelligent-u-key-pair.pem ec2-user@54.164.3.223:~

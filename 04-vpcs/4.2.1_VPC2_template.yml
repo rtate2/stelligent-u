@@ -1,0 +1,142 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Second private VPC
+
+Parameters:
+  cidrBlock:
+    Description: CIDR block in private IP space
+    Type: String
+
+  vpc1NetBlock:
+    Description: CIDR block of VPC1
+    Default:
+      !ImportValue
+        'rt-m04u1x1-stack-RandyVpcNetblock1'
+    Type: String
+
+Resources:
+  RandyVPC2:
+    Type: AWS::EC2::VPC
+    Properties:
+      #1. Add a new CIDR block to VPC that doesn't overlap the original one
+      CidrBlock: !Ref cidrBlock
+      Tags:
+        - Key: "Name"
+          Value: "rtate-vpc2"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.2"
+        - Key: "stelligent-u-lab"
+          Value: "4.2.1"
+
+  RandySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.2.0/24'
+      Tags:
+        - Key: "Name"
+          Value: "rtate-subnet"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.2"
+        - Key: "stelligent-u-lab"
+          Value: "4.2.1"
+      VpcId: !Ref RandyVPC2
+
+  ##New Code######################################################################################
+  RandyVPCPeeringConnection:
+    Type: AWS::EC2::VPCPeeringConnection
+    Properties:
+      PeerRegion: 'us-east-2'
+      PeerVpcId:
+        !ImportValue
+          'rt-m04u1x1-stack-RandyVPC'
+      Tags:
+        - Key: "Name"
+          Value: "rtate-vpcPeeringConnection"
+      VPCId: !Ref RandyVPC2
+
+  ##Add Network ACLs that allow all traffic in from VPC1
+  RandyNetworkAclPrivate:
+    Type: AWS::EC2::NetworkAcl
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "rtate-networkAclPrivate"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.2"
+        - Key: "stelligent-u-lab"
+          Value: "4.2.1"
+      VpcId: !Ref RandyVPC2
+
+  RandyNetworkAclEntryVpc2FromVpc1:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      CidrBlock: !Ref vpc1NetBlock
+      NetworkAclId: !Ref RandyNetworkAclPrivate
+      Protocol: -1
+      RuleAction: allow
+      RuleNumber: 100
+
+  RandyNetworkAclEntryVpcOut:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: true
+      NetworkAclId: !Ref RandyNetworkAclPrivate
+      Protocol: -1
+      RuleAction: allow
+      RuleNumber: 99
+
+  ##End of New Code###############################################################################
+
+  RandyElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: "Name"
+          Value: "rtate-eIP2"
+
+  RandyRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RandyVPC2
+
+  RandyRoute1:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      DestinationCidrBlock: !Ref vpc1NetBlock
+      VpcPeeringConnectionId: !Ref RandyVPCPeeringConnection
+
+  RandySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      SubnetId: !Ref RandySubnet
+
+Outputs:
+  MyVpc:
+    Description: Randy's main VPC
+    Value: !Ref RandyVPC2
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyVPC2'
+
+  MySubnet2:
+    Description: Randy's private subnet
+    Value: !Ref RandySubnet
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyPrivateSubnet2'
+
+  MyVpcNetblock:
+    Description: CIDR block of VPC-2
+    Value: !Ref cidrBlock
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyVpcNetblock2'
+
+# Execution command: aws cloudformation create-stack --stack-name rt-m04u2x1-stack --template-body file://4.2.1_VPC2_template.yml --parameters file://4.2.1_VPC2_parameters.json --region us-east-2 

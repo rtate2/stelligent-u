@@ -1,0 +1,93 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: New VPC with Public subnet stack
+
+Parameters:
+  cidrBlock:
+    Description: CIDR block in private IP space
+    Type: String
+
+Resources:
+  # 1. Create VPC and assign it to a /16 CIDR block in private IP space
+  RandyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref cidrBlock
+      # 4. Tag all new resources with following
+      Tags:
+        - Key: "Name"
+          Value: "rtate-vpc"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.1"
+
+  RandySubnet:
+    # 2. Create EC2 subnet within my CIDR block that has a /24 netmask
+    Type: AWS::EC2::Subnet
+    Properties: 
+      CidrBlock: '10.0.0.0/24'
+      Tags:
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.1"
+      VpcId: !Ref RandyVPC
+
+  # 5. Add an Internet Gateway resource
+  RandyInternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  # 6. Attach the InternetGateway to VPC
+  RandyInternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref RandyInternetGateway
+      VpcId: !Ref RandyVPC
+
+  # 7. Create a route table for the VPC, add the gateway to it, attach it to the subnet
+  RandyRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RandyVPC
+
+  RandyRoute1:   # Public route table has direct routing to IGW:
+    Type: AWS::EC2::Route
+    DependsOn: RandyInternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref RandyInternetGateway
+
+  # Need to figure out why this didn't work as expected
+  # RandyGatewayRouteTableAssociation:
+  #   Type: AWS::EC2::GatewayRouteTableAssociation
+  #   Properties:
+  #     GatewayId: !GetAtt RandyInternetGateway.InternetGatewayId
+  #     RouteTableId: !Ref RandyRouteTable
+
+  RandySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      SubnetId: !Ref RandySubnet
+
+Outputs:
+  # 3. Provide VPC ID and subnet ID as stack outputs
+  MyVpc:
+    Description: Randy's main VPC
+    Value: !Ref RandyVPC
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyVPC'
+
+  MySubnet:
+    Description: Randy's private subnet
+    Value: !Ref RandySubnet
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyPrivateSubnet'
+
+# Execution command: aws cloudformation update-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.2_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 

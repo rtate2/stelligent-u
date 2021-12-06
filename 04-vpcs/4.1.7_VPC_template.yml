@@ -1,0 +1,106 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: New VPC with Public subnet stack
+
+Parameters:
+  cidrBlock:
+    Description: CIDR block in private IP space
+    Type: String
+
+Resources:
+  RandyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref cidrBlock
+      Tags:
+        - Key: "Name"
+          Value: "rtate-vpc"
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.1"
+
+  RandySubnet:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      CidrBlock: '10.0.0.0/24'
+      Tags:
+        - Key: "user"
+          Value: "rtate_aa"
+        - Key: "stelligent-u-lesson"
+          Value: "4.1"
+        - Key: "stelligent-u-lab"
+          Value: "4.1.1"
+      VpcId: !Ref RandyVPC
+
+  RandyInternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  RandyInternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref RandyInternetGateway
+      VpcId: !Ref RandyVPC
+
+  ####New Code##########################################################################################################
+  #1. Create a NAT Gateway and attach to subnet
+  RandyNatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt RandyElasticIP.AllocationId
+      SubnetId: !Ref RandySubnet
+      Tags:
+        - Key: "Name"
+          Value: "rtate-natgateway"
+
+  #2. Provision and attach a new Elastic IP for the NAT Gateway
+  RandyElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: "Name"
+          Value: "rtate-eIP2"
+  ####End of New Code###################################################################################################
+
+  RandyRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref RandyVPC
+
+  RandyRoute1:   # Public route table has direct routing to IGW:
+    Type: AWS::EC2::Route
+    DependsOn: RandyInternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref RandyInternetGateway
+
+  RandySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RandyRouteTable
+      SubnetId: !Ref RandySubnet
+
+Outputs:
+  MyVpc:
+    Description: Randy's main VPC
+    Value: !Ref RandyVPC
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyVPC'
+
+  MySubnet:
+    Description: Randy's private subnet
+    Value: !Ref RandySubnet
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyPrivateSubnet'
+
+  MyNatGateway:
+    Description: Randy's NAT Gateway
+    Value: !Ref RandyNatGateway
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyNatGateway'
+
+# Execution command: aws cloudformation update-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.7_VPC_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 
