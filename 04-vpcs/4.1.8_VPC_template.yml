@@ -7,6 +7,13 @@ Parameters:
     Description: CIDR block in private IP space
     Type: String
 
+  vpc2NetBlock:
+    Description: CIDR block of VPC2
+    Default:
+      !ImportValue
+        'rt-m04u2x1-stack-RandyVpcNetblock2'
+    Type: String
+
 Resources:
   RandyVPC:
     Type: AWS::EC2::VPC
@@ -205,5 +212,11 @@ Outputs:
     Value: !Ref RandyNatGateway
     Export:
       Name: !Sub '${AWS::StackName}-RandyNatGateway'
+
+  MyVpcNetblock:
+    Description: CIDR block of VPC-2
+    Value: !Ref cidrBlock
+    Export:
+      Name: !Sub '${AWS::StackName}-RandyVpcNetblock1'
 
 # Execution command: aws cloudformation update-stack --stack-name rt-m04u1x1-stack --template-body file://4.1.7_VPC_template.yml --parameters file://4.1.1_parameters.json --region us-east-1 
