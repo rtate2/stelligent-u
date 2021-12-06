@@ -123,6 +123,29 @@ policy:
 - Update the Stack. *Did the stack update work?*
 
   - Query the stack to determine its state.
+  {
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:858633482938:stack/rt-m03x11-stack/ef3841d0-41aa-11ec-a8e9-0a99f216c4c9",
+            "StackName": "rt-m03x11-stack",
+            "Description": "IAM roles creation",
+            "CreationTime": "2021-11-09T22:18:47.243000+00:00",
+            "LastUpdatedTime": "2021-11-10T02:11:55.397000+00:00",
+            "RollbackConfiguration": {},
+            "StackStatus": "UPDATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Capabilities": [
+                "CAPABILITY_NAMED_IAM"
+            ],
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}
   - If the stack update was not successful,
     [troubleshoot and determine why](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement).
 
@@ -148,12 +171,45 @@ tool and practice using it.
 - Using the two roles in your stack, simulate the ability of each role
   to perform the following actions (using the AWS CLI):
 
+  RandyIamRole - aws iam simulate-custom-policy --policy-input-list '{ "Version": "2012-10-17","Statement": [{ "Action": [ "iam:GenerateCredentialReport", "iam:GenerateServiceLastAccessedDetails", "iam:Get*", "iam:List*", "iam:SimulateCustomPolicy", "iam:SimulatePrincipalPolicy" ],"Resource": "*","Effect": "Allow"}]}' --action-names "iam:ListRoles*" --output text
+
+  RandyIamRole2 - aws iam simulate-custom-policy --policy-input-list file://RandyIamRole2.json  --action-names "ec2:DescribeImages*" --output text
+
   - `iam:CreateRole`
+  RandyIamRole - EVALUATIONRESULTS       iam:CreateRole* implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       iam:CreateRole* implicitDeny    *
+  
   - `iam:ListRoles`
+  RandyIamRole -  EVALUATIONRESULTS       iam:ListRoles*  allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.1       IAM Policy
+                  ENDPOSITION     248     1
+                  STARTPOSITION   41      1
+  RandyIamRole2 - EVALUATIONRESULTS       iam:ListRoles*  allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.2       IAM Policy
+                  ENDPOSITION     10      15
+                  STARTPOSITION   19      3
+  
   - `iam:SimulatePrincipalPolicy`
+  RandyIamRole - EVALUATIONRESULTS       iam:SimulatePrincipalPolicy*    implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       iam:SimulatePrincipalPolicy*    implicitDeny    *
+  
   - `ec2:DescribeImages`
+  RandyIamRole - EVALUATIONRESULTS       ec2:DescribeImages*     implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       ec2:DescribeImages*     allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.1       IAM Policy
+                  ENDPOSITION     14      9
+                  STARTPOSITION   23      4
+  
   - `ec2:RunInstances`
+  RandyIamRole - EVALUATIONRESULTS       ec2:RunInstances*       implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       ec2:RunInstances*       implicitDeny    *
+  
   - `ec2:DescribeSecurityGroups`
+  RandyIamRole - EVALUATIONRESULTS       ec2:DescribeSecurityGroups*       implicitDeny    *
+  RandyIamRole2 - EVALUATIONRESULTS       ec2:DescribeSecurityGroups*     allowed *
+                  MATCHEDSTATEMENTS       PolicyInputList.1       IAM Policy
+                  ENDPOSITION     14      9
+                  STARTPOSITION   23      4
 
 #### Lab 3.1.6: Clean Up
 
@@ -167,6 +223,8 @@ _In Lab 3.1.5, you had to determine the Amazon resource Names (ARN) of the
 stack's two roles in order to pass those values to the CLI function. You
 probably used the AWS web console to get the ARN for each role. What
 could you have done to your CFN template to make that unnecessary?_
+
+I could have "output" both roles ARN and then describe-stack to get the ARNs from the output.
 
 #### Task: Stack Outputs
 
@@ -223,10 +281,12 @@ Test the capabilities of this new Role.
 
 - Using the AWS CLI, assume that updated role and list the S3 buckets
   in the us-east-1 region.
+  I could not list the s3 buckets (AccessDenied)
 
 - Acting as this role, try to create an S3 bucket using the AWS CLI.
 
   - Did it succeed? It should not have!
+    Nope!
   - If it succeeded, troubleshoot how Read access allowed the role
     to create a bucket.
 
@@ -258,14 +318,20 @@ Clean up. Take the actions necessary to delete the stack.
 _In the context of an AWS User or Role, what is the difference between
 an inline policy and a customer managed policy? What are the differences
 between a customer managed policy and an AWS managed policy?_
+An inline policy is attached directly to the role during creation. A customer managed policy can be inline or stand-alone.
+An AWS managed policy is stock with permissions you cannot change, while a customer managed policy gives the customer the freedom to make any changes.
 
 #### Question: Role Assumption
 
 _When assuming a role, are the permissions of the initial principal
 mixed with those of the role being assumed?
+Nope!
+
 Describe how that could easily be demonstrated with both a
 [positive and negative testing](https://www.guru99.com/positive-vs-negative-testing.html)
 approach._
+With positive testing I would test my "allow" s3:ReadOnly by attempting to list a bucket and/or its contents
+With negative testing I would attempt to create a bucket or upload a file; anything that isn't directly related to the "allow", but testing more of the "deny"
 
 ## Lesson 3.3: Fine-Grained Controls With Policies
 
@@ -321,8 +387,11 @@ read-only access to the other.
   - Upload a file to each new bucket.
 
 *Were there any errors? If so, take note of them.*
+rt-stelligent-u-bucket-2 (s3 Read Only) failed to upload.
+upload failed: data\randyfile3.txt to s3://rt-stelligent-u-bucket-2/randyfile3.txt An error occurred (AccessDenied) when calling the PutObject operation: Access Denied
 
 *What were the results you expected, based on the role's policy?*
+I expected the read only to fail whenever I attempted to upload the file. The Full Access performed exactly how I expected and successfully uploaded the file.
 
 #### Lab 3.3.3: Conditional restrictions
 
@@ -365,7 +434,14 @@ Code at least one new positive and one new negative test.
 _Is it possible to limit uploads of objects with a specific prefix (e.g.
 starting with "lebowski/") to an S3 bucket using IAM conditions? If not, how else
 could this be accomplished?_
+Nope! At least I didn't find it.
 
+I created an Allow s3:Put* policy with specific resources pointing to 'arn:aws:s3:::rt-stelligent-u-bucket-2/lebowski*'
+
+I then used the following to upload files: aws s3 cp lebowski/lebowskifile2.txt s3://rt-stelligent-u-bucket-2/lebowski/
+
+After my initial testing, I'm not sure how we could limit uploads of objects besides using the exclude param along with the include.
+ex. aws s3 sync . s3://rt-stelligent-u-bucket-1/lebowski/ --exclude "*" --include "lebowski/*"
 #### Task: Limiting Uploads
 
 Research and review the best method to limit uploads with a specific prefix to

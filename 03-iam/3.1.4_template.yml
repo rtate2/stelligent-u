@@ -1,0 +1,46 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM roles creation
+
+Resources:
+  RandyIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - iam.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/IAMReadOnlyAccess'
+
+  RandyIamRole2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - iam.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/IAMReadOnlyAccess'
+
+Outputs:
+  RandyIamRoleARN:
+    Description: ARN of RandyIamRole
+    Value: !GetAtt RandyIamRole.Arn
+  
+  RandyIamRole2ARN:
+    Description: ARN of RandyIamRole2
+    Value: !GetAtt RandyIamRole2.Arn
+
+    # Execution: aws cloudformation update-stack --stack-name rt-m03x11-stack --template-body file://3.1.4_template.yml --capabilities CAPABILITY_NAMED_IAM

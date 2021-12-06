@@ -1,0 +1,33 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Randy is making his first CFN template from scratch
+
+Parameters:
+  BucketName:
+    Description: Randy's S3 bucket
+    Type: String
+
+Conditions:
+  PreferredRegion: !Equals
+    - !Ref AWS::Region
+    - us-east-1
+
+Resources:
+  RandysS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        !If
+          - PreferredRegion
+          - !Join
+            - '-'
+            - - !Ref AWS::AccountId
+              - !Ref BucketName
+          - !Join
+            - '-'
+            - - !Ref AWS::Region
+              - !Ref BucketName
+
+    # Execution command: aws cloudformation create-stack --stack-name rt-m01u1-train-use1 --template-body file://template.yml --parameters file://parameters.json --region us-east-2

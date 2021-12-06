@@ -1,0 +1,29 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM roles creation
+
+Resources:
+  RandyIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - iam.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: RandyReadOnlyPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'iam:Get*'
+                  - 'iam:List*'
+                Resource: '*'
+
+  # Execution: aws cloudformation create-stack --stack-name rt-m03x11-stack --template-body file://3.1.1_template.yml --capabilities CAPABILITY_NAMED_IAM

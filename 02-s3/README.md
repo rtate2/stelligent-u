@@ -120,11 +120,13 @@ Add an object to your bucket:
 ##### Question: Copying to Top Level
 
 _How would you copy the contents of the directory to the top level of your bucket?_
+aws s3 cp ./data/ s3://stelligent-u-rtate --recursive
 
 ##### Question: Directory Copying
 
 _How would you copy the contents and include the directory name in the s3 object
 paths?_
+aws s3 cp ./data/ s3://stelligent-u-rtate/data/ --recursive
 
 ##### Question: Object Access
 
@@ -135,6 +137,7 @@ For further reading, see the S3 [Access Policy Language Overview](https://docs.a
 ##### Question: Sync vs Copy
 
 _What makes "sync" a better choice than "cp" for some S3 uploads?_
+It automatically recursively copies of directories
 
 #### Lab 2.1.3: Exclude Private Objects When Uploading to a Bucket
 
@@ -179,6 +182,7 @@ directory with the "aws s3 sync" command.
 
 _After this, can you download one of your files from the bucket without using
 your API credentials?_
+Yes, I was able to download the files without using my API creds.
 
 #### Lab 2.2.2: Use the CLI to Restrict Access to Private Data
 
@@ -193,9 +197,12 @@ permissions on the file?_
 
 (Hint: see the list of [Canned ACLs](https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl).)
 
+aws s3 cp data/private.txt s3://stelligent-u-rtate/data/ --acl bucket-owner-full-control
+
 ##### Question: Changing Permissions
 
 _Is there a way you can change the permissions on the file without re-uploading it?_
+Yes, you could go to the AWS console and edit the access control list within the permissions tab
 
 #### Lab 2.2.3: Using the API from the CLI
 
@@ -223,10 +230,12 @@ file and read "private.txt".
 
 _What do you see when you try to read the existing bucket policy before you
 replace it?_
+An error - "An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist"
 
 #### Question: Default Permissions
 
 _How do the default permissions differ from the policy you're setting?_
+The default permissions block all public read access, while the policy I wrote allows me (user rtate_aa) to have the maintenance priviledges.
 
 #### Lab 2.2.4: Using CloudFormation
 

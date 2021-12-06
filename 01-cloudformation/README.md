@@ -159,19 +159,27 @@ name.
 #### Question: Why YAML
 
 _Why do we prefer the YAML format for CFN templates?_
+YAML use less punctuation and should be easier to write and to read. YAML inherently provides some features, such as commenting, that aren't available in JSON.
 
 #### Question: Protecting Resources
 
 _What else can you do to prevent resources in a stack from being deleted?_
+Set the DeletionPolicy attribute to prevent the deletion of an individual resource at the stack level.
 
 See [DeletionPolicy](https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-accidental-updates/).
 
 _How is that different from applying Termination Protection?_
+Termination Protection keeps the entire stack from being deleted when enabled, while DeletionPolicy attribute can target specific resources to manage within the stack during deletion or updates.
 
 #### Task: String Substitution
 
 Demonstrate 2 ways to code string combination/substitution using
 built-in CFN functions.
+1. !Sub
+  - String
+  - Var1Name: Var1Value
+    Var2Name: Var2Value
+2.  !Join [ delimiter, [ comma-delimited list of values ] ]
 
 ## Lesson 1.2: Integration with Other AWS Resources
 
@@ -226,6 +234,11 @@ the Managed Policy ARN created by and exported from the previous Stack.
 Delete your CFN stacks in the same order you created them in. Did you
 succeed? If not, describe how you would _identify_ the problem, and
 resolve it yourself.
+I did not succeed. 
+
+"Export rt-102u1-train-use1-rtManagedPolicyARN cannot be deleted as it is in use by rt-102u3-train-use1"
+
+I checked the console and found the error in the Events tab within the CFN stack. I would just have to delete the stacks in reverse order of creation.
 
 ### Retrospective 1.2
 
@@ -233,6 +246,15 @@ resolve it yourself.
 
 Show how to use the IAM policy tester to demonstrate that the user
 cannot perform 'Put' actions on any S3 buckets.
+
+https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/simulate-custom-policy.html
+
+aws iam simulate-custom-policy \
+--policy-input-list '{ "Version": "2012-10-17","Statement": [{ "Action": [ "s3:Describe*", "s3:List*" ],"Resource": "*","Effect": "Allow"}]}' \
+--action-names "s3:PUT*" \
+--output text
+
+EVALUATIONRESULTS       s3:PUT* implicitDeny    *
 
 #### Task: SSM Parameter Store
 
