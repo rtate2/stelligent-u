@@ -27,3 +27,6 @@ aws cloudformation describe-stack-resources --stack-name rt-m05u1x2-stack
 
 - Describe individual instances
 aws ec2 describe-instances --instance-ids i-0576d8c004ff9f29e i-0a372f5b7bdd51700
+
+- Query stack events from cli
+aws cloudformation describe-stack-events --stack-name rt-m05u1x2-stack

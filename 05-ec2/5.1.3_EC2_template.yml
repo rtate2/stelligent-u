@@ -1,0 +1,43 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Randy's Two ec2 Instance template
+
+Resources:
+  RandyLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        InstanceType: t2.micro
+        KeyName: stelligent-u-key-pair
+      LaunchTemplateName: RandyLaunchTemplate
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+           - "Key": "Name"
+             "Value": "rt-launch-template"
+
+  RandyEc2Win:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref RandyLaunchTemplate
+        # LaunchTemplateName: String
+        Version: 1
+      ImageId: ami-0f7aae50ae5ac00c7
+      Tags:
+        - Key: "Name"
+          Value: "rtate-ec2-windows"
+
+  RandyEc2Ubuntu:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+         LaunchTemplateId: !Ref RandyLaunchTemplate
+        #  LaunchTemplateName: String
+         Version: 1
+      ImageId: ami-0efe4f891cb9f7b45
+      Tags:
+        - Key: "Name"
+          Value: "rtate-ec2-ubuntu"
+
+  ## Exec: aws cloudformation update-stack --stack-name rt-m05u1x2-stack --template-body file://5.1.3_EC2_template.yml --region us-east-1
