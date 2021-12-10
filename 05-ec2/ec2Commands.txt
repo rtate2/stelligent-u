@@ -15,3 +15,15 @@ curl http://169.254.169.254/latest/meta-data/security-groups
 
  - Networking Subnet ID
 curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/0e:1a:c1:9f:01:57/subnet-id
+
+- Find an AMI
+aws ec2 describe-images --owners self amazon
+
+- Describe stack
+aws cloudformation describe-stacks --stack-name rt-m05u1x2-stack
+
+- Describe stack resources
+aws cloudformation describe-stack-resources --stack-name rt-m05u1x2-stack
+
+- Describe individual instances
+aws ec2 describe-instances --instance-ids i-0576d8c004ff9f29e i-0a372f5b7bdd51700
