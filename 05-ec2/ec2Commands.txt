@@ -25,6 +25,16 @@ aws cloudformation describe-stacks --stack-name rt-m05u1x2-stack
 - Describe stack resources
 aws cloudformation describe-stack-resources --stack-name rt-m05u1x2-stack
 
+- obtain latest AWS Linux 2 AMI ID --> script
+echo "Obtaining the latest AWS Linux 2 AMI ID"
+AMI_ID=$(aws ec2 describe-images --owners amazon --filters 'Name=root-device-type,Values=ebs' 'Name=architecture,Values=x86_64' 'Name=description,Values=Amazon Linux 2 Kernel 5.10*' | jq -r '[ .Images[] | {ImageId,CreationDate} ] | sort_by(.CreationDate) | reverse | first | .ImageId' &)
+echo "Found '$AMI_ID' to use"
+
+- obtain latest Windows Server 2012 R2 ID --> instance
+echo "Obtaining the latest AWS Linux 2 AMI ID"
+AMI_ID=$(aws ec2 describe-images --owners amazon --filters 'Name=root-device-type,Values=ebs' 'Name=architecture,Values=x86_64' 'Name=description,Values=Windows Server 2012 R2*' | jq -r '[ .Images[] | {ImageId,CreationDate} ] | sort_by(.CreationDate) | reverse | first | .ImageId' &)
+echo "Found '$AMI_ID' to use"
+
 - Describe individual instances
 aws ec2 describe-instances --instance-ids i-0576d8c004ff9f29e i-0a372f5b7bdd51700
 
