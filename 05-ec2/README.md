@@ -164,6 +164,7 @@ values via a scripted mechanism.
 _When updating a Stack containing an EC2 instance,
 [what other changes](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html)
 will cause the same thing to occur as in Lab 5.1.3?_
+If we are replacing an instance, CFN creates the replacement resource, changes the reference to the replacement, then deletes the old resource.
 
 ## Lesson 5.2: Instance Access
 
@@ -298,6 +299,8 @@ Userdata docs to debug.
 
   - Is it necessary to [apply monitoring scripts](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html)
     to send data to CloudWatch?
+
+    Nope! Monitoring scripts have been deprecated.
 
 - Create a new role that trusts the EC2 Service to assume it, and that
   has the privileges to perform whatever actions are necessary to

@@ -1,0 +1,42 @@
+-- Get the top-level metadata items
+curl http://169.254.169.254/latest/meta-data/
+
+- Get image snapshot, or AMI the instance was launched from
+ curl http://169.254.169.254/latest/meta-data/ami-id
+
+ - Type of instance
+ curl http://169.254.169.254/latest/meta-data/instance-type
+
+ - Public IPV4 IP address
+ curl http://169.254.169.254/latest/meta-data/local-ipv4
+
+ - Security Group the instance is associated with
+curl http://169.254.169.254/latest/meta-data/security-groups
+
+ - Networking Subnet ID
+curl http://169.254.169.254/latest/meta-data/network/interfaces/macs/0e:1a:c1:9f:01:57/subnet-id
+
+- Find an AMI
+aws ec2 describe-images --owners self amazon
+
+- Describe stack
+aws cloudformation describe-stacks --stack-name rt-m05u1x2-stack
+
+- Describe stack resources
+aws cloudformation describe-stack-resources --stack-name rt-m05u1x2-stack
+
+- obtain latest AWS Linux 2 AMI ID --> script
+echo "Obtaining the latest AWS Linux 2 AMI ID"
+AMI_ID=$(aws ec2 describe-images --owners amazon --filters 'Name=root-device-type,Values=ebs' 'Name=architecture,Values=x86_64' 'Name=description,Values=Amazon Linux 2 Kernel 5.10*' | jq -r '[ .Images[] | {ImageId,CreationDate} ] | sort_by(.CreationDate) | reverse | first | .ImageId' &)
+echo "Found '$AMI_ID' to use"
+
+- obtain latest Windows Server 2012 R2 ID --> instance
+echo "Obtaining the latest AWS Linux 2 AMI ID"
+AMI_ID=$(aws ec2 describe-images --owners amazon --filters 'Name=root-device-type,Values=ebs' 'Name=architecture,Values=x86_64' 'Name=description,Values=Windows Server 2012 R2*' | jq -r '[ .Images[] | {ImageId,CreationDate} ] | sort_by(.CreationDate) | reverse | first | .ImageId' &)
+echo "Found '$AMI_ID' to use"
+
+- Describe individual instances
+aws ec2 describe-instances --instance-ids i-0576d8c004ff9f29e i-0a372f5b7bdd51700
+
+- Query stack events from cli
+aws cloudformation describe-stack-events --stack-name rt-m05u1x2-stack

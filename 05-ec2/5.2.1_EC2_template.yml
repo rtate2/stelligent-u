@@ -1,0 +1,73 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Randy's Two ec2 Instance template
+
+Parameters:
+  LinuxAMI:
+    Type: String
+    Description: Latest AMI for Ubuntu 16
+
+Resources:
+  RandyLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref LinuxAMI
+        InstanceType: t2.micro
+        KeyName: stelligent-u-key-pair
+        SecurityGroupIds:
+          - !Ref RandySG
+      LaunchTemplateName: RandyLaunchTemplate
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+           - "Key": "Name"
+             "Value": "rt-launch-template"
+
+  RandyEc2Ubuntu:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+         LaunchTemplateId: !Ref RandyLaunchTemplate
+         Version: 1
+      Tags:
+        - Key: "Name"
+          Value: "rtate-ec2-ubuntu"
+
+  RandyEIP:
+   Type: AWS::EC2::EIP
+   Properties:
+     Domain: vpc
+     InstanceId: !Ref RandyEc2Ubuntu
+     Tags:
+       - Key: "Name"
+         Value: "rtate-elasticIp"
+
+  RandySG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: rtate SG
+      GroupName: RandySG
+      SecurityGroupEgress:
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 23.114.161.156/32
+      Tags:
+        - Key: "Name"
+          Value: rtate-SG
+      VpcId: vpc-09519c2d03f379507
+
+Outputs:
+  RandysEIP:
+    Description: Elastic IP of RandyEc2Ubuntu instance
+    Value: !Ref RandyEIP
+    Export:
+      Name: !Sub "${AWS::StackName}-RandysEIP"
+
+  ## Exec: aws cloudformation create-stack --stack-name rt-m05u2x1-stack --template-body file://5.2.1_EC2_template.yml --parameters file://5.2.1_EC2_parameters.json --region us-east-1

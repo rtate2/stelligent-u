@@ -1,0 +1,9 @@
+#!/bin/bash
+
+stack="rt-m05u1x2-stack"
+
+echo "Creating $stack..."
+
+aws cloudformation create-stack --stack-name $stack --template-body file://5.1.2_EC2_template.yml --region us-east-1
+
+aws cloudformation wait stack-create-complete --stack-name $stack
