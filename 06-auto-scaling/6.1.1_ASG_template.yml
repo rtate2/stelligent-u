@@ -1,0 +1,23 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Randy's EC2 ASG template
+
+Resources:
+  RandyEc2Debian:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-07d02ee1eeb0c996c
+      InstanceType: t2.micro
+      KeyName: stelligent-u-key-pair
+      Tags:
+        - Key: "Name"
+          Value: "rtate-ec2-debian"
+
+Outputs:
+  RandyInstanceId:
+    Description: Instance ID of RandyEc2Debian Instance
+    Value: !Ref RandyEc2Debian
+    Export:
+      Name: !Sub "${AWS::StackName}-RandyInstanceId"
+
+  ## Exec: aws cloudformation create-stack --stack-name rt-m06u1x1-stack --template-body file://6.1.1_ASG_template.yml --region us-east-1

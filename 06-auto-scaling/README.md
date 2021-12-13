@@ -107,10 +107,12 @@ Group (ASG): [ask Amazon to create one for us from a running instance](https://d
 ##### Question: Resources
 
 _What was created in addition to the new Auto Scaling Group?_
+Amazon EC2 Auto Scaling creates a launch configuration and associates it withthe Auto Scaling Group.
 
 ##### Question: Parameters
 
 _What parameters did Amazon record in the resources it created for you?_
+Instance type, AMI ID and Key Pair Name (Also, the default SG)
 
 #### Lab 6.1.2: Launch Config and ASG in CFN
 

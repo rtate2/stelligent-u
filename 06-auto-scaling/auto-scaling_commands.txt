@@ -1,0 +1,2 @@
+- Create an auto-scaling group
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name rtate-auto-scaling-group --instance-id i-0a16f5ea08794dd5b --min-size 1 --max-size 1 --desired-capacity 1
