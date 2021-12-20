@@ -136,6 +136,7 @@ created for you in Lab 6.1.1.
 
 _What config info or resources did you have to create explicitly that Amazon
 created for you when launching an ASG from an existing instance?_
+I had to explicity create a launch configuration and associates it with the Auto Scaling Group.
 
 #### Lab 6.1.3: Launch Config Changes
 
@@ -151,6 +152,7 @@ Terminate the instance in your ASG.
 ##### Question: Replacement Instance
 
 _Is the replacement instance the new size or the old?_
+It's the new size; t2.small
 
 #### Lab 6.1.4: ASG Update Policy
 
@@ -164,6 +166,7 @@ type to t2.medium. Update your stack.
 
 _After updating, what did you see change? Did your running instance get
 replaced this time?_
+Neither...
 
 ##### Question: Launch Config
 
