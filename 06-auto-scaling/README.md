@@ -202,6 +202,7 @@ associated with those. Then tear your stack down.
 
 _After you tear down the stack, do all the associated resources go away?
 What's left?_
+Yes, all of the associated resources are deleted. The LT, the ASG and EC2 instance are deleted/terminated.
 
 ### Retrospective 6.1
 
