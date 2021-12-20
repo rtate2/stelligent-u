@@ -184,6 +184,7 @@ parameters you need to.
 
 _What config info or resources do you have to provide in addition to what
 Launch Configurations require?_
+You can use launch templates to store launch parameters so that you do not have to specify them every time you launch an instance. You can create launch template versions which can contain different launch parameters making it useful when deploying many different types of ec2 instances. It's just better than the traditional launch configs.
 
 You'll see both launch configs and launch templates in your client
 engagements. Templates were [introduced in Nov 2017](https://aws.amazon.com/about-aws/whats-new/2017/11/introducing-launch-templates-for-amazon-ec2-instances/)
