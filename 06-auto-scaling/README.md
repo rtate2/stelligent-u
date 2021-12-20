@@ -167,11 +167,12 @@ type to t2.medium. Update your stack.
 
 _After updating, what did you see change? Did your running instance get
 replaced this time?_
-Neither...
+The running instance was replaced.
 
 ##### Question: Launch Config
 
 _Did the launch config change or was it replaced?_
+The launch config was replaced
 
 #### Lab 6.1.5: Launch Template
 
