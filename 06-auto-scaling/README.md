@@ -146,6 +146,7 @@ t2.small. Update your stack.
 ##### Question: Stack Updates
 
 _After updating your stack, did your running instance get replaced or resized?_
+Neither...
 
 Terminate the instance in your ASG.
 
