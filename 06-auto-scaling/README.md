@@ -262,10 +262,12 @@ then update the stack.
 ##### Question: Desired Count
 
 _Did it work? If it didn't, what else do you have to increase?_
+No, I had to increase my max size of my ASG.
 
 ##### Question: Update Delay
 
 _How quickly after your stack update did you see the ASG change?_
+It took 2 minutes to update the stack and change my ASG.
 
 #### Lab 6.2.3: Manual Interference
 
