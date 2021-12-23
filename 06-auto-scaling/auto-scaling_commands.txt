@@ -10,3 +10,5 @@ aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names RandyAut
 - Terminate a specific instance from cli
 aws ec2 terminate-instances --instance-ids i-0183a6603814ec78e
 
+- Manually set instance health within ASG
+aws autoscaling set-instance-health --instance-id i-0b01d4ec86308c70f --health-status Unhealthy
