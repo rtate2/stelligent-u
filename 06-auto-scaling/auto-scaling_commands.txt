@@ -1,2 +1,12 @@
 - Create an auto-scaling group
 aws autoscaling create-auto-scaling-group --auto-scaling-group-name rtate-auto-scaling-group --instance-id i-0a16f5ea08794dd5b --min-size 1 --max-size 1 --desired-capacity 1
+
+- Describe stack resources
+aws cloudformation describe-stack-resources --stack-name rt-m06u2x1-stack
+
+- Filter w/ query, finding the InstanceId with ASG
+aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names RandyAutoScalingGroup --region us-east-1 --query "AutoScalingGroups[*].Instances[*].InstanceId"
+
+- Terminate a specific instance from cli
+aws ec2 terminate-instances --instance-ids i-0183a6603814ec78e
+

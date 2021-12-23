@@ -250,6 +250,7 @@ the new instance launch.
 
 _How long did it take for the new instance to spin up? How long before it was
 marked as healthy?_
+Didn't take long at all. Maybe 2-4 minutes to spin up and be marked as healthy.
 
 #### Lab 6.2.2: Scale Out
 
