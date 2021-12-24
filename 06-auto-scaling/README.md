@@ -312,6 +312,7 @@ commands you run.
 #### Question: CloudWatch
 
 _How would you use AWS CloudWatch to help monitor your ASG?_
+CloudWatch captures all metrics from the ASG and provides an opportunity to troubleshoot any issues.
 
 You can read more [here](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-instance-monitoring.html)
 about CloudWatch monitoring with ASGs.
