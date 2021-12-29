@@ -373,15 +373,18 @@ Update your stack.
 ##### Question: Instance Count
 
 _Do you see more instances than the configured "desired capacity"?_
+Yes
 
 ##### Question: Termination Order
 
 _If an instance is automatically terminated, which is it, the last one created
 or the first?_
+The last one created was automatically terminated
 
 ##### Question: Termination Policy
 
 _Can you change your policies to alter which instance gets terminated first?_
+Yes, by adding the TerminationPolicies property to the AutoScalingGroup resource; specifying which instance you would like terminated first.
 
 #### Lab 6.3.3: Target Tracking policy
 
