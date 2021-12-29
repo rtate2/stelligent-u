@@ -351,12 +351,14 @@ and use that command to spike the load.)
 ##### Question: Scaling Interval
 
 _After the scaling interval, do you see a new instance created?_
+Yes
 
 Stop the CPU-consuming process.
 
 ##### Question: Scale-In
 
 _After the load has been low for a few minutes, do you see any instances terminated?_
+No
 
 #### Lab 6.3.2: Simple Scale-In
 
