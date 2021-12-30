@@ -429,6 +429,7 @@ an instance is added.
 ##### Question: Changing Delay
 
 _After you stop consuming CPU, how long does it take now before scale-in?_
+It took 20 minutes for before scale-in.
 
 ### Retrospective 6.3
 
