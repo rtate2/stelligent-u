@@ -406,16 +406,19 @@ update your stack again.*
 
 _Is your resulting configuration more or less complicated than the one that
 uses a simple policy?_
+Seems to be less complicated
 
 Consume CPU the way you did in lab 1, then stop.
 
 ##### Question: Scale-Out Delay
 
 _How long do you have to let it run before you see the group scale out?_
+A few minutes after I stressed the instance CPU past the threshold.
 
 ##### Question: Scale-In Delay
 
 _How much time passes after you stop before it scales back in?_
+About 1 minute
 
 #### Lab 6.3.4: Target Tracking Scale-In
 
