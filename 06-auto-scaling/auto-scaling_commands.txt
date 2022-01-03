@@ -1,0 +1,26 @@
+- Create an auto-scaling group
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name rtate-auto-scaling-group --instance-id i-0a16f5ea08794dd5b --min-size 1 --max-size 1 --desired-capacity 1
+
+- Describe stack resources
+aws cloudformation describe-stack-resources --stack-name rt-m06u2x1-stack
+
+- Filter w/ query, finding the InstanceId with ASG
+aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names RandyAutoScalingGroup --region us-east-1 --query "AutoScalingGroups[*].Instances[*].InstanceId"
+
+- Terminate a specific instance from cli
+aws ec2 terminate-instances --instance-ids i-0183a6603814ec78e
+
+- Manually set instance health within ASG
+aws autoscaling set-instance-health --instance-id i-0b01d4ec86308c70f --health-status Unhealthy
+
+- Manually set instance to standby
+aws autoscaling enter-standby --instance-ids i-0a7fd7b1cc214c8df  --auto-scaling-group-name RandyAutoScalingGroup --should-decrement-desired-capacity
+
+- Remove instace from standby mode
+aws autoscaling exit-standby --instance-ids i-0a7fd7b1cc214c8df --auto-scaling-group-name RandyAutoScalingGroup
+
+- Suspend a specific process
+aws autoscaling suspend-processes --auto-scaling-group-name RandyAutoScalingGroup --scaling-processes Launch
+
+- Resume a specific process
+aws autoscaling resume-processes --auto-scaling-group-name RandyAutoScalingGroup --scaling-processes Launch
