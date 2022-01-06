@@ -68,6 +68,7 @@ many instances with an ALB.
 
 _What is the benefit of breaking up the load balancer into specific listeners
 and target groups?_
+Allows the one load balancer to be used in multiple applications; able to be reused.
 
 #### Lab 7.1.2: Health Checks
 
