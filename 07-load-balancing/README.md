@@ -92,10 +92,12 @@ haywire!
 
 _What can be controlled with the interval/healthy threshold/unhealthy threshold
 settings?_
+The amount of time to check / how many times the TG performs health checks before instances are marked unhealthy.
 
 ##### Question: ASG Behavior
 
 _What's happening to the instances in the ASG? How do you know?_
+Each instance is being terminated while new ones are being started; one at a time. I looked at the ASG Activity history.
 
 #### Lab 7.1.3: Secure Sockets
 
