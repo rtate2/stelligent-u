@@ -124,11 +124,18 @@ Let's fix that bad health check endpoint and add an https listener.
 ##### Question: SSL Policy
 
 _What is the trade off of going with a more secure SSL policy?_
+1. Performance... When a SSL certificate is used on a site, the speed of transactions will get drastically reduced.
+2. Protocal complications
+3. Caching
+4. Expiry - the cert would require renewal to keep the site secure.
+
+On the other hand, with SSL the "information" is encrypted, the data is authenticated and provides reliability.
 
 ##### Question: Certificate Management
 
 _We imported a local certificate into ACM, what other options do you have? How
 do those processes work?_
+We could could upload an SSL certificate to IAM using AWS Command Line Interface. The cert must be valid at the time of upload. the cert, private key, and the cert chain must be PEM-encoded.
 
 #### Lab 7.1.4: Cleanup
 

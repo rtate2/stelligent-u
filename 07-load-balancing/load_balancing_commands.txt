@@ -8,3 +8,5 @@ echo "Obtaining the default VPC ID"
 DEFAULT_VPC_ID=$( aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query 'Vpcs[*].VpcId' --output text &)
 echo "Found default VPC '$DEFAULT_VPC_ID' to use"
 
+- generate a self-signed certificate using OpenSSL
+https://www.ibm.com/docs/en/api-connect/5.0.x?topic=profiles-generating-self-signed-certificate-using-openssl
