@@ -10,4 +10,7 @@ __pycache__
 *.code-workspace
 
 .ruby-version
+
+# Certs
 *.pem
+*.p12
