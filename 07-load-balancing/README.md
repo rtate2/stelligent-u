@@ -68,6 +68,7 @@ many instances with an ALB.
 
 _What is the benefit of breaking up the load balancer into specific listeners
 and target groups?_
+Allows the one load balancer to be used in multiple applications; able to be reused.
 
 #### Lab 7.1.2: Health Checks
 
@@ -91,10 +92,12 @@ haywire!
 
 _What can be controlled with the interval/healthy threshold/unhealthy threshold
 settings?_
+The amount of time to check / how many times the TG performs health checks before instances are marked unhealthy.
 
 ##### Question: ASG Behavior
 
 _What's happening to the instances in the ASG? How do you know?_
+Each instance is being terminated while new ones are being started; one at a time. I looked at the ASG Activity history.
 
 #### Lab 7.1.3: Secure Sockets
 
@@ -121,11 +124,18 @@ Let's fix that bad health check endpoint and add an https listener.
 ##### Question: SSL Policy
 
 _What is the trade off of going with a more secure SSL policy?_
+1. Performance... When a SSL certificate is used on a site, the speed of transactions will get drastically reduced.
+2. Protocal complications
+3. Caching
+4. Expiry - the cert would require renewal to keep the site secure.
+
+On the other hand, with SSL the "information" is encrypted, the data is authenticated and provides reliability.
 
 ##### Question: Certificate Management
 
 _We imported a local certificate into ACM, what other options do you have? How
 do those processes work?_
+We could could upload an SSL certificate to IAM using AWS Command Line Interface. The cert must be valid at the time of upload. the cert, private key, and the cert chain must be PEM-encoded.
 
 #### Lab 7.1.4: Cleanup
 

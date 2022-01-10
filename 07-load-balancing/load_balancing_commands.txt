@@ -1,0 +1,12 @@
+- Find the lastest Linux AMI 
+aws ssm get-parameters --names /aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2 --region us-east-1
+
+- Get the default VPC
+# obtain default VPC ID
+# https://stackoverflow.com/a/59709443
+echo "Obtaining the default VPC ID"
+DEFAULT_VPC_ID=$( aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query 'Vpcs[*].VpcId' --output text &)
+echo "Found default VPC '$DEFAULT_VPC_ID' to use"
+
+- generate a self-signed certificate using OpenSSL
+https://www.ibm.com/docs/en/api-connect/5.0.x?topic=profiles-generating-self-signed-certificate-using-openssl
