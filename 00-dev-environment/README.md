@@ -28,7 +28,6 @@
   - [Managing access keys](https://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html)
   - [Configuration and credentials files](https://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html)
 
-- DO use the Cloud9 environment for all training work unless otherwise specified.
 - DO use the [AWS documentation and user guides](https://aws.amazon.com/documentation/).
 
 ## Lesson 0.1: Setting up your development environment
@@ -39,16 +38,18 @@
 leads to a solution others can contribute to.*
 
 The following labs will prepare you to work through the Stelligent
-new hire training over the next 8 weeks. During the training you
+new hire training. During the training you
 will be using AWS access keys for programmatic access to an AWS account,
-GitHub code repositories, and AWS Cloud9 for your development environment.
+GitHub code repositories, and, optionally, AWS Cloud9 for your development environment.
 
 ### Practice 0.1
 
 #### Lab 0.1.1: AWS Access Keys
 
-Add your AWS access key and secret key to your laptop. You
-will need to [install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
+Add your AWS access key and secret key to your laptop before enabling MFA. You won't
+be able to retrieve your token if the access key and secret key are not added
+to your credentials file.You will need to
+[install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
 and then run some simple commands to confirm access using your keys:
 
 - [list-buckets](https://docs.aws.amazon.com/cli/latest/reference/s3api/list-buckets.html)
@@ -98,18 +99,32 @@ aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 aws_session_token = AQoDYXdzEJr...<remainder of security token>
 ```
 
-Now set AWS_PROFILE to temp in your env, or set the --profile flag to temp when
-running awscli. You should be able to access any of the resources you're
+Now set AWS_PROFILE to temp in your env:
+
+```shell
+export AWS_ACCESS_KEY_ID=<temp aws_access_key_id >
+export AWS_SECRET_ACCESS_KEY=<temp aws_secret_access_key>
+export AWS_DEFAULT_REGION=<region>
+```
+
+or set the --profile flag to temp when
+running awscli:
+
+```shell
+aws s3 ls --profile temp
+```
+
+You should be able to access any of the resources you're
 authorized to in the labs account. These tokens will last approximately
 12 hours before needing to be reset using the process above.
 
-###### Exercise 0.1.1: MFA Script
+##### Exercise 0.1.1: MFA Script
 
 1. Create a script to automate the gathering and assigning of the temporary
   AWS MFA credentials from Option 1.
 1. Try to reduce the amount of manual input as much as possible.
 
-###### Question 0.1.1: 1
+##### Question 0.1.1: 1
 
 What method did you use to store the aws credentials?  What are some other
 options?
@@ -156,7 +171,7 @@ You want to set an alias in your .bashrc or .zshrc to something like this:
   test access. Use [this GitHub guide](https://help.github.com/articles/connecting-to-github-with-ssh/)
   to get access and clone the private repo to your laptop.
 
-#### Lab 0.1.3: Cloud9 Environment
+#### Lab 0.1.3: Cloud9 Environment (Optional)
 
 AWS Cloud 9 is a resource to quickly re-create a stock development
 environment accessible from almost anywhere in a browser. You can use
@@ -174,11 +189,11 @@ CLI commands as you did in [lab 0.1.1](#lab-011-aws-access-keys):
 
 #### Lab 0.1.4: Clone Repository
 
-Work with your GitHub repo in your Cloud9 development environment. Start
+Work with your GitHub repo in your development environment. Start
 at [step 3 of this user guide](https://docs.aws.amazon.com/cloud9/latest/user-guide/sample-github.html#sample-github-install-git)
 to configure the Cloud9 instance to work with GitHub.
 
-1. Install git in Cloud9.
+1. Install git in your development environment.
 
 1. Clone the repository to your Cloud9 environment. To gain
    access to the repository try using either
@@ -201,7 +216,7 @@ keys?_
 Configure Cloud9 to work with the programming language you will be using
 to complete the training work. In your Cloud9 Editor, perform the following:
 
-- Please choose either Ruby, Python, Go or NodeJS
+- Please choose either Python, Ruby, Go or NodeJS
 - Create a new branch off master
 - In the 00-dev-environment directory, develop a small "hello world!"
   application in that language
