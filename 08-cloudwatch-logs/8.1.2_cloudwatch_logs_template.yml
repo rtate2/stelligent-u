@@ -2,20 +2,20 @@ AWSTemplateFormatVersion: "2010-09-09"
 Mappings:
   RegionMap:
     us-east-1:
-      vpcId: vpc-da3c10bc
-      subnetId: subnet-ec6f2c89
+      vpcId: vpc-09519c2d03f379507
+      subnetId: subnet-0b1b4886031bb1486
       imageId: ami-04169656fea786776
     us-east-2:
-      vpcId: vpc-9aa942f3
-      subnetId: subnet-8332c4ea
+      vpcId: vpc-04057d6d
+      subnetId: subnet-5d6cb210
       imageId: ami-0552e3455b9bc8d50
     us-west-1:
-      vpcId: vpc-0c00d304ac554a97f
-      subnetId: subnet-05a1407456ad0c8e8
+      vpcId: vpc-31660f55
+      subnetId: subnet-69787e0d
       imageId: ami-059e7901352ebaef8
     us-west-2:
-      vpcId: vpc-8bc484f2
-      subnetId: subnet-ebc60ca0
+      vpcId: vpc-86fe7fe1
+      subnetId: subnet-c8cceb90
       imageId: ami-51537029
 Resources:
   LaunchTemplate:
@@ -26,6 +26,7 @@ Resources:
         InstanceType: t2.nano
         IamInstanceProfile: 
           Name: !Ref InstanceProfile
+        KeyName: stelligent-u-key-pair
         NetworkInterfaces:
           -
             DeviceIndex: 0
@@ -57,10 +58,10 @@ Resources:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: "1"
       ImageId: !FindInMap [ RegionMap, !Ref "AWS::Region", imageId ]
-    CreationPolicy:
-      ResourceSignal:    
-        Count: 1
-        Timeout: PT5M
+    # CreationPolicy:
+    #   ResourceSignal:    
+    #     Count: 1
+    #     Timeout: PT25M
     Metadata: 
       AWS::CloudFormation::Init: 
         config: 
@@ -98,3 +99,5 @@ Resources:
     Properties: 
       GroupDescription: Topic 5 - EC2 Lab
       VpcId: !FindInMap [ RegionMap, !Ref "AWS::Region", vpcId ]
+
+## Exec: aws cloudformation create-stack --stack-name rt-m08u1x2-stack --template-body file://8.1.2_cloudwatch_logs_template.yml --region us-east-1 --capabilities CAPABILITY_NAMED_IAM
