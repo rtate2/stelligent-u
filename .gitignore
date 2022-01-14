@@ -11,3 +11,4 @@ __pycache__
 
 .ruby-version
 *.pem
+*.p12
