@@ -30,25 +30,25 @@ Resources:
             /usr/bin/apt-get update -y
             /usr/bin/apt-get install -y python3-pip
             python3 -m pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-2.0-9.tar.gz
-            /usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2 --configsets default --region ${AWS::Region}
-            /usr/local/bin/cfn-signal --exit-code $? --stack ${AWS::StackName} --resource EC2 --region ${AWS::Region}
-  EC2:
+            /usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource RandyEC2 --configsets default --region ${AWS::Region}
+            /usr/local/bin/cfn-signal --exit-code $? --stack ${AWS::StackName} --resource RandyEC2  --region ${AWS::Region}
+
+  RandyEC2:
     Type: AWS::EC2::Instance
     Properties:
       LaunchTemplate:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: "1"
-    # CreationPolicy:
-    #   ResourceSignal:
-    #     Timeout: PT5M
-    #     Count: '1'
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
     Metadata:
       AWS::CloudFormation::Init:
         configSets:
           default:
             - install
             - config
-            # - launch
+            - launch
         install:
           sources:
             /etc/cloudwatchagent: https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/AmazonCloudWatchAgent.zip
@@ -59,11 +59,60 @@ Resources:
         config:
           files:
             /opt/aws/amazon-cloudwatch-agent/amazon-cloudwatch-agent.json:
-              content: file://amazon-cloudwatch-agent.json
-        # launch:
-        #   commands:
-        #     launchCloudwatch:
-        #       command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/amazon-cloudwatch-agent.json -s
+              content: !Sub |
+                {
+                  "agent": {
+                    "metrics_collection_interval": 60,
+                    "run_as_user": "root"
+                    },
+                    "logs": {
+                      "logs_collected": {
+                        "files": {
+                          "collect_list": [
+                            {
+                              "file_path": "/var/log/**.log",
+                              "log_group_name": "randy.tate.logs",
+                              "log_stream_name": "rt-training"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "metrics": {
+                      "append_dimensions": {
+                        "AutoScalingGroupName": "${!aws:AutoScalingGroupName}",
+                          "ImageId": "${!aws:ImageId}",
+                          "InstanceId": "${!aws:InstanceId}",
+                          "InstanceType": "${!aws:InstanceType}"
+                      },
+                      "metrics_collected": {
+                        "disk": {
+                          "measurement": [
+                            "used_percent"
+                          ],
+                          "metrics_collection_interval": 60,
+                            "resources": [
+                              "*"
+                          ]
+                        },
+                        "mem": {
+                          "measurement": [
+                            "mem_used_percent"
+                          ],
+                          "metrics_collection_interval": 60
+                        },
+                        "statsd": {
+                          "metrics_aggregation_interval": 60,
+                          "metrics_collection_interval": 10,
+                          "service_address": ":8125"
+                        }
+                      }
+                    }
+                }
+        launch:
+          commands:
+            launchCloudwatch:
+              command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/amazon-cloudwatch-agent.json -s
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -75,6 +124,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
         - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
