@@ -1,0 +1,19 @@
+- Create a CloudWatch log group via CLI
+aws logs create-log-group --log-group-name randy.tate.logs --tags Name=rt-log-group
+
+- Create a CloudWatch log stream via CLI
+aws logs create-log-stream --log-group-name randy.tate.logs --log-stream-name rt-training
+
+- List a CloudWatch log group via CLI
+aws logs describe-log-groups --log-group-name randy.tate.logs
+
+- List a CloudWatch log stream via CLI
+aws logs describe-log-streams --log-group-name randy.tate.logs --log-stream-name rt-training
+
+- List ubuntu instance metadata --> profile, security-groups, etc. 
+ec2metadata --profile
+
+- Nice resource for troubleshooting CloudWatch Agent
+https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/troubleshooting-CloudWatch-Agent.html#CloudWatch-Agent-troubleshooting-update-no-new-metrics
+AND
+https://aws.amazon.com/premiumsupport/knowledge-center/cloudwatch-push-logs-with-unified-agent/

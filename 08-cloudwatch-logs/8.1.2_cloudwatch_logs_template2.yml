@@ -1,0 +1,144 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  UbuntuAMI:
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: '/aws/service/canonical/ubuntu/server/20.04/stable/current/amd64/hvm/ebs-gp2/ami-id'
+  VPCID:
+    Type: 'AWS::EC2::VPC::Id'
+    Default: vpc-09519c2d03f379507
+  SubnetID:
+    Type: 'AWS::EC2::Subnet::Id'
+    Default: subnet-0b1b4886031bb1486
+Resources:
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: EC2LaunchTemplate
+      LaunchTemplateData:
+        InstanceType: t3.nano
+        ImageId: !Ref UbuntuAMI
+        IamInstanceProfile:
+          Name: !Ref InstanceProfile
+        KeyName: stelligent-u-key-pair
+        NetworkInterfaces:
+          - DeviceIndex: 0
+            AssociatePublicIpAddress: True
+            SubnetId: !Ref SubnetID
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            /usr/bin/apt-get update -y
+            /usr/bin/apt-get install -y python3-pip
+            python3 -m pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-2.0-9.tar.gz
+            /usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource RandyEC2 --configsets default --region ${AWS::Region}
+            /usr/local/bin/cfn-signal --exit-code $? --stack ${AWS::StackName} --resource RandyEC2  --region ${AWS::Region}
+
+  RandyEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: "1"
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          default:
+            - install
+            - config
+            - launch
+        install:
+          sources:
+            /etc/cloudwatchagent: https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/AmazonCloudWatchAgent.zip
+          commands:
+            installCloudwatch:
+              command: ./install.sh
+              cwd: /etc/cloudwatchagent
+        config:
+          files:
+            /opt/aws/amazon-cloudwatch-agent/amazon-cloudwatch-agent.json:
+              content: !Sub |
+                {
+                  "agent": {
+                    "metrics_collection_interval": 60,
+                    "run_as_user": "root"
+                    },
+                    "logs": {
+                      "logs_collected": {
+                        "files": {
+                          "collect_list": [
+                            {
+                              "file_path": "/var/log/**.log",
+                              "log_group_name": "randy.tate.logs",
+                              "log_stream_name": "rt-training"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "metrics": {
+                      "append_dimensions": {
+                        "AutoScalingGroupName": "${!aws:AutoScalingGroupName}",
+                          "ImageId": "${!aws:ImageId}",
+                          "InstanceId": "${!aws:InstanceId}",
+                          "InstanceType": "${!aws:InstanceType}"
+                      },
+                      "metrics_collected": {
+                        "disk": {
+                          "measurement": [
+                            "used_percent"
+                          ],
+                          "metrics_collection_interval": 60,
+                            "resources": [
+                              "*"
+                          ]
+                        },
+                        "mem": {
+                          "measurement": [
+                            "mem_used_percent"
+                          ],
+                          "metrics_collection_interval": 60
+                        },
+                        "statsd": {
+                          "metrics_aggregation_interval": 60,
+                          "metrics_collection_interval": 10,
+                          "service_address": ":8125"
+                        }
+                      }
+                    }
+                }
+        launch:
+          commands:
+            launchCloudwatch:
+              command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/amazon-cloudwatch-agent.json -s
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref RoleCloudWatch
+  RoleCloudWatch:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: 'RT - Stelligent-U 08 CloudWatch'
+      VpcId: !Ref VPCID
+
+## Exec: aws cloudformation create-stack --stack-name rt-m08u1x2-stack --template-body file://8.1.2_cloudwatch_logs_template2.yml --region us-east-1 --capabilities CAPABILITY_NAMED_IAM
