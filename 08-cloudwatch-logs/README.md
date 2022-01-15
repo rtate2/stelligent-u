@@ -139,9 +139,12 @@ company's business. It's helpful to know what CloudWatch Log's service
 limitations are.*
 
 - What are the minimum and maximum retention times?
+Minimum - 1 day
+Maximum - 3,653 days
 
 - Instead of keeping data in CW Logs forever, can you do anything else
   with them? What might a useful lifecycle for logs look like?
+  Send them to AWS S3 and decide which level of storage you want the logs to cycle through its life.
 
 ## Lesson 8.2: CloudWatch Logs with CloudTrail events
 
