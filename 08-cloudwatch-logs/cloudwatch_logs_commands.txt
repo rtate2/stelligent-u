@@ -17,3 +17,27 @@ ec2metadata --profile
 https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/troubleshooting-CloudWatch-Agent.html#CloudWatch-Agent-troubleshooting-update-no-new-metrics
 AND
 https://aws.amazon.com/premiumsupport/knowledge-center/cloudwatch-push-logs-with-unified-agent/
+
+- Install awslogs
+pip install awslogs
+
+- List existing groups via awslogs
+awslogs groups --aws-region us-east-1
+
+List existing streams within a group
+awslogs streams randy.tate.logs --aws-region us-east-1
+
+- Get logs matching a STREAM_EXPRESSION in randy.tate.logs group (You need the correct IAM permissions set -  CloudWatchLogsReadOnlyAccess policy)
+awslogs get randy.tate.logs ALL --aws-region us-east-1
+
+- Get logs from log group from last 5 mins
+awslogs get randy.tate.logs ALL --aws-region us-east-1 --start='5m'
+
+- Set the retention policy of log group to 60 days
+aws logs put-retention-policy --log-group-name randy.tate.logs --retention-in-days 60
+
+- Review policy in log group
+aws logs describe-log-groups --log-group-name randy.tate.logs
+
+- Delete log group and associated logs
+aws logs delete-log-group --log-group-name randy.tate.logs
