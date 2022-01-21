@@ -1,0 +1,12 @@
+- Test invoke the root resource in an API by making a POST request
+aws apigateway test-invoke-method --rest-api-id eecrypadv4 --resource-id b7v413ffe5 --http-method POST --path-with-query-string '/'
+
+- Invoke the lambda from cli
+aws lambda invoke --invocation-type RequestResponse --function-name rt-m09u1x2-stack-RandyLambdaFunction-WEPHtgwRlkvt --region us-east-1 --payload IntcbiAgXCJrZXkxXCI6IFwidmFsdWUxXCIsXG4gIFwia2V5MlwiOiBcInZhbHVlMlwiLFxuICBcImtleTNcIjogXCJ2YWx1ZTNcIlxufSIK output.txt
+
+- Make a s3 bucket
+aws s3 mb s3://rtate-bucket
+
+- Use aws cloudformation package command to upload a zip file and transform template.yml to one with correct paths
+aws cloudformation package --template-file 9.1.3_lambda_template.yml --s3-bucket rtate-bucket
+...then use the newly created template to deploy the stack.
