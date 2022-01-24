@@ -66,10 +66,12 @@ Use the KMS CLI to now decrypt a ciphertext file.
 
 _For decrypting the ciphertext file, why didn't you have to specify a key? How
 did you have permission to decrypt?_
+If the ciphertext was encrypted under a symmetric KMS key, the KeyId parameter is optional. KMS can get this information from metadata that it adds to the symmetric ciphertext blob. This feature adds durability to your implementation by ensuring that authorized users can decrypt ciphertext decades after it was encrypted, even if they’ve lost track of the key ID. However, specifying the KMS key is always recommended as a best practice.
 
 #### Question: KMS Alias
 
 _Why is it beneficial to use a KMS Alias?_
+Aliases can make your code easier to write and maintain. For example, suppose you use an alias to refer to a particular KMS key and you want to change the KMS key. In that case, just associate the alias with a different KMS key. You don't need to change your code.
 
 ## Lesson 10.2: Implementation of KMS Keys in S3
 
