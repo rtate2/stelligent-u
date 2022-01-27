@@ -1,0 +1,5 @@
+- had to run this command before Windows would allow proper communication
+export MSYS2_ARG_CONV_EXCL="*"
+
+- query for all parameters within a hierarchy by using the GetParametersByPath API operation
+aws ssm get-parameters-by-path --path /rtate_aa/stelligent-u/lab11/
