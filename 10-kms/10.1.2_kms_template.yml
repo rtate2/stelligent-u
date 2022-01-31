@@ -1,0 +1,31 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Randy's KMS template
+
+Resources:
+  RandyKmsKey:
+    Type: AWS::KMS::Key
+    Properties: 
+      Description: rtate_aa KMS Key
+      KeyPolicy:
+        Version: 2012-10-17
+        Statement:
+          - Sid: "rtate_aa engineer policy statement"
+            Effect: Allow
+            Principal:
+              AWS:
+                - 'arn:aws:iam::858633482938:user/rtate_aa'
+                - 'arn:aws:iam::858633482938:root'
+            Action: 'kms:*'
+            Resource: '*'
+      Tags: 
+        - Key: "Name"
+          Value: "rtate_kms_key"
+
+  RandyKmsAlias:
+    Type: AWS::KMS::Alias
+    Properties: 
+      AliasName: alias/T8_D_GR8
+      TargetKeyId: !Ref RandyKmsKey
+
+# exec: aws cloudformation update-stack --stack-name rt-m10u1x1-stack --template-body file://10.1.2_kms_template.yml --region us-east-1

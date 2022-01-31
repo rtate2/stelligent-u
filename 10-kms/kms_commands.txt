@@ -1,0 +1,5 @@
+- Encrypts a plaintext into ciphertext by using a KMS key
+aws kms encrypt --key-id alias/T8_D_GR8 --plaintext fileb://unencrypted_secret_file.txt --output text --query CiphertextBlob | base64 --decode > encrypted_secret_file
+
+- Decrypts ciphertext that was encrypted by a KMS key
+aws kms decrypt --key-id alias/T8_D_GR8 --ciphertext-blob fileb://encrypted_secret_file --output text --query Plaintext | base64 --decode >unencrypted_secret_file2

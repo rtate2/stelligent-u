@@ -1,0 +1,76 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Randy's KMS template
+
+Parameters:
+  name:
+    Description: Engineer's Name
+    Type: String
+
+  team:
+    Description: Engineer's Team
+    Type: String
+
+  timezone:
+    Description: Engineer's Timezone
+    Type: String
+
+  location:
+    Description: Engineer's Location
+    Type: String
+  
+  startdate:
+    Description: Engineer's Start Date
+    Type: String
+
+Resources:
+  RandyParameterName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      # AllowedPattern: "^[a-zA-Z0-9_.-]*$"
+      Description: Engineer Name
+      Name: /rtate_aa/stelligent-u/lab11/name
+      Tier: Standard
+      Type: String
+      Value: !Ref name
+
+  RandyParameterTeam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      # AllowedPattern: "^[a-zA-Z0-9_.-]*$"
+      Description: Engineer Team
+      Name: /rtate_aa/stelligent-u/lab11/team
+      Tier: Standard
+      Type: String
+      Value: !Ref team
+
+  RandyParameterTimeZone:
+    Type: AWS::SSM::Parameter
+    Properties:
+      # AllowedPattern: "^[a-zA-Z0-9_.-]*$"
+      Description: Engineer Time Zone
+      Name: /rtate_aa/stelligent-u/lab11/timezone
+      Tier: Standard
+      Type: String
+      Value: !Ref timezone
+
+  RandyParameterLocation:
+    Type: AWS::SSM::Parameter
+    Properties:
+      # AllowedPattern: "^[a-zA-Z0-9_.-]*$"
+      Description: Engineer Location
+      Name: /rtate_aa/stelligent-u/lab11/state
+      Tier: Standard
+      Type: String
+      Value: !Ref location
+
+  RandyParameterStart:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Engineer Start Date
+      Name: /rtate_aa/stelligent-u/lab11/start-date
+      Tier: Standard
+      Type: String
+      Value: !Ref startdate
+
+# exec: aws cloudformation create-stack --stack-name rt-m11u1x1-stack --template-body file://11.1.1_parameter_store_template.yml --parameters file://ps_parameters.json --region us-east-1

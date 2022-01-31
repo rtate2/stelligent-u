@@ -1,0 +1,8 @@
+- had to run this command before Windows would allow proper communication
+export MSYS2_ARG_CONV_EXCL="*"
+
+- query for all parameters within a hierarchy by using the GetParametersByPath API operation
+aws ssm get-parameters-by-path --path /rtate_aa/stelligent-u/lab11/
+
+- create secure string parameter via cli
+aws ssm put-parameter --name /rtate_aa/stelligent-u/lab11/middle-name --description 'Engineer Middle Name' --value NMN --type SecureString --key-id alias/aws/ssm

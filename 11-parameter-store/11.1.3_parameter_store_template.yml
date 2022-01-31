@@ -1,0 +1,141 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Randy's Introduction to Load Balancers Template
+
+Parameters:
+  # topKey:
+  #   Description: Top level key of hierarchy
+  #   Type: AWS::SSM::Parameter::Name
+  #   Default: /rtate_aa/stelligent-u/lab11/
+  name:
+    Description: Engineer's Name
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /rtate_aa/stelligent-u/lab11/name
+
+  team:
+    Description: Engineer's Team
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /rtate_aa/stelligent-u/lab11/team
+
+  timezone:
+    Description: Engineer's Timezone
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /rtate_aa/stelligent-u/lab11/timezone
+
+  location:
+    Description: Engineer's Location
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /rtate_aa/stelligent-u/lab11/state
+  
+  startdate:
+    Description: Engineer's Start Date
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /rtate_aa/stelligent-u/lab11/start-date
+
+Resources:
+  WebServerAsg:
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
+    Properties:
+      AutoScalingGroupName: 'AutomationBoxes'
+      VPCZoneIdentifier:
+        - 'subnet-0b1b4886031bb1486' 
+        - 'subnet-06add4a05f99fa0b1'
+      DesiredCapacity: '3'
+      HealthCheckType: 'ELB'
+      HealthCheckGracePeriod: 30 
+      LaunchConfigurationName: !Ref WebServersLC
+      MaxSize: '3'
+      MinSize: '3'
+      TargetGroupARNs:
+        - !Ref RandyTargetGroup
+
+  WebServersLC:
+    Type: 'AWS::AutoScaling::LaunchConfiguration'
+    Properties:
+      ImageId: 'ami-0abfd868f654b92be'
+      InstanceType: 't2.micro'
+      LaunchConfigurationName: 'SimpleWebServerLC'
+      SecurityGroups:
+        - 'sg-05d3389a4f581eaed'
+      UserData: 
+        Fn::Base64:
+          Fn::Sub: |
+            #!/bin/bash -xe
+
+            yum install -y nginx
+
+            yum install -y aws-cfn-bootstrap
+
+            # Install the files and packages from the metadata
+            /opt/aws/bin/cfn-init -v \
+              --stack ${AWS::StackName} \
+              --resource WebServersLC \
+              --configsets All \
+              --region ${AWS::Region}
+
+            # Signal the status from cfn-init
+            /opt/aws/bin/cfn-signal -e $? \
+              --stack ${AWS::StackName} \
+              --resource WebServersLC \
+              --region ${AWS::Region}
+    Metadata:
+      'AWS::CloudFormation::Init':
+        configSets:
+          All:
+            - ConfigureStelligentProject
+        ConfigureStelligentProject:
+          packages:
+            yum:
+              nginx: []
+          files:
+            /usr/share/nginx/html/index.html:
+              content: !Sub '<ul><li>${name}</li><li>${team}</li><li>${timezone}</li><li>${location}</li><li>${startdate}</li></ul>'
+              # content: '<ul><li>{{resolve:ssm:/rtate_aa/stelligent-u/lab11/name:1}}<li><li>{{resolve:ssm:/rtate_aa/stelligent-u/lab11/start-date:1}}<li><li>{{resolve:ssm:/rtate_aa/stelligent-u/lab11/state:1}}<li><li>{{resolve:ssm:/rtate_aa/stelligent-u/lab11/team:1}}<li><li>{{resolve:ssm:/rtate_aa/stelligent-u/lab11/timezone:1}}<li></ul>'
+              mode: '000644'
+              owner: root
+              group: root
+          services:
+            sysvinit:
+              nginx:
+                enabled: 'true'
+                ensureRunning: 'true'
+
+  RandyTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckPath: /index.html
+      HealthCheckPort: traffic-port
+      HealthCheckProtocol: HTTP
+      Port: 80
+      Protocol: HTTP
+      Tags:
+        - Key: "Name"
+          Value: "rt-target_group"
+      VpcId: vpc-09519c2d03f379507
+    DependsOn:
+      - RandyALB
+
+  RandyALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties: 
+      IpAddressType: ipv4
+      Scheme: internet-facing
+      SecurityGroups: 
+        - sg-05d3389a4f581eaed
+      Subnets: 
+        - subnet-0b1b4886031bb1486 
+        - subnet-06add4a05f99fa0b1
+      Tags:
+        - Key: "Name"
+          Value: "rt-application-load-balancer"
+
+  RandyALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions: 
+        - TargetGroupArn: !Ref RandyTargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref RandyALB
+      Port: 80
+      Protocol: HTTP
+
+## Exec: aws cloudformation create-stack --stack-name rt-m11u1x3-stack --template-body file://11.1.3_parameter_store_template.yml --region us-east-1
