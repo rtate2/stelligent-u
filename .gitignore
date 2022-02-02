@@ -12,3 +12,4 @@ __pycache__
 .ruby-version
 *.pem
 *.p12
+codepipeline_parameters.json
